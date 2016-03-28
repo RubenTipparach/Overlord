@@ -108,7 +108,7 @@ namespace AnneysEmpire
 
 			for (int i = 0; i < a.Rows; i++)
 			{
-				for (int j = 0; j < a.Columns; i++)
+				for (int j = 0; j < a.Columns; j++)
 				{
 					result[i, j] = adf(a[i, j]);
 				}

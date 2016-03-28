@@ -22,7 +22,7 @@ namespace AnneysEmpire
 					{1,0,1},
 					{1,1,1}});
 
-			VectorN yArray = new VectorN(new double[4] { 0, 0, 1, 1 });
+			VectorN yArray = new VectorN(new double[4] { 0, 1, 1, 0 });
 
 			// fill wieghted array with random weights,
 			// and teach it to conform
@@ -39,7 +39,7 @@ namespace AnneysEmpire
 			// Seeding the neurons with random weights.
 			for (int j = 0; j < syn0.Columns; j++)
 			{
-				for (int i = 0; i < syn0.Rows; j++ )
+				for (int i = 0; i < syn0.Rows; i++ )
 				{
 					syn0[i, j] = 2*r.NextDouble() - 1;
 				}
@@ -56,8 +56,23 @@ namespace AnneysEmpire
 
 				VectorN l2_error = VectorN.Subtract(yArray, l2);
 
+				// Print out the average error.
+				if (i%10000 == 0)
+				{
+					Console.WriteLine("Error: " + l2_error.Mean(true));
+				}
 
-            }
+				VectorN l2_delta = VectorN.Product(l2_error, VectorN.ApplyCustomOperation(AMath.SigmoidLinear, l2));
+
+				// Apparently this came out as a scalar.
+				double l1_error = l2_delta.Dot(syn1);
+
+				// Apply that scalar to l1 to get l1_delta.
+				Matrix l1_delta = Matrix.ApplyCustomOperation(AMath.SigmoidLinear, l1).Scalar(l1_error);
+
+				syn1 = VectorN.Add(syn1, VectorN.Product(Matrix.Transpose(l1), l2_delta));
+				syn0.Add(Matrix.Transpose(l0).Dot(l1_delta));
+			}
         }
 	}
 }
