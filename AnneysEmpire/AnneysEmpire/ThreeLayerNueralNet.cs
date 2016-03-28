@@ -22,7 +22,7 @@ namespace AnneysEmpire
 					{1,0,1},
 					{1,1,1}});
 
-			VectorN yArray = new VectorN(new double[4] { 0, 1, 1, 0 });
+			VectorN yArray = new VectorN(new double[4] { 0, 0, 1, 1 });
 
 			// fill wieghted array with random weights,
 			// and teach it to conform
@@ -48,10 +48,10 @@ namespace AnneysEmpire
 			}
 
 			// begin firing neurons.
-			for(int i = 0; i < 60000; i++)
+			for(int i = 0; i < 60001; i++)
 			{
 				l0 = xArray;
-				l1 = Matrix.ApplyCustomOperation(AMath.Sigmoid, l0.Dot(syn0));
+				l1 = Matrix.ApplyCustomOperation(AMath.Sigmoid, Matrix.Dot(l0, syn0));
 				l2 = VectorN.ApplyCustomOperation(AMath.Sigmoid, VectorN.Product(l1, syn1));
 
 				VectorN l2_error = VectorN.Subtract(yArray, l2);
@@ -59,19 +59,32 @@ namespace AnneysEmpire
 				// Print out the average error.
 				if (i%10000 == 0)
 				{
+					Console.WriteLine("-------- test " + i  + " --------");
 					Console.WriteLine("Error: " + l2_error.Mean(true));
 				}
 
+				// inner product
 				VectorN l2_delta = VectorN.Product(l2_error, VectorN.ApplyCustomOperation(AMath.SigmoidLinear, l2));
 
-				// Apparently this came out as a scalar.
+				// scalar product
 				double l1_error = l2_delta.Dot(syn1);
 
 				// Apply that scalar to l1 to get l1_delta.
 				Matrix l1_delta = Matrix.ApplyCustomOperation(AMath.SigmoidLinear, l1).Scalar(l1_error);
 
-				syn1 = VectorN.Add(syn1, VectorN.Product(Matrix.Transpose(l1), l2_delta));
-				syn0.Add(Matrix.Transpose(l0).Dot(l1_delta));
+				syn1 = VectorN.Add(syn1, VectorN.Product(l1.Transpose(), l2_delta));
+				Matrix weights = Matrix.Dot(l0.Transpose(), l1_delta);
+				syn0.Add(weights);
+
+				if (i % 10000 == 0)
+				{
+					Console.WriteLine();
+					Console.ForegroundColor = ConsoleColor.Yellow;
+					Console.WriteLine("l1 : \n" + l1);
+					Console.ForegroundColor = ConsoleColor.Gray;
+					Console.WriteLine("l2 delta: " + l2_delta);
+					Console.WriteLine("syn1: " + syn1);
+				}
 			}
         }
 	}

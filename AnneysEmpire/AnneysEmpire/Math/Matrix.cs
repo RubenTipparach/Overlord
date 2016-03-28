@@ -9,6 +9,7 @@ namespace AnneysEmpire
 	/// <summary>
 	/// The Matrix class used for creating arbitrary NxM matrices, equipped with fancy math operations.
 	/// TODO: use some GPU library that could optimize this.
+	/// TODO: IEnumerable might help?
 	/// </summary>
 	public class Matrix
 	{
@@ -80,6 +81,7 @@ namespace AnneysEmpire
 				return _rows;
 			}
 		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -98,6 +100,7 @@ namespace AnneysEmpire
 				_matrixDouble[i, j] = value;
 			}
 		}
+
 		/// <summary>
 		/// Uses a callback function for each of the elements in the Matrix.
 		/// </summary>
@@ -141,14 +144,6 @@ namespace AnneysEmpire
 					for (int k = 0; k < a._columns; k++)
 					{
 						// Iteratre through each column of A, multiplying it by each column of B.
-						//if ((i + j) % 2 == 0)
-						//{
-						//	result += a[i, k] * b[k, i]; // even cells
-						//}
-						//else
-						//{
-						//	result += a[i, k] * b[k, (b.columns - 1) - i];//odd cells
-						//}
 						result += a[i, k] * b[k, j]; // even cells
 					}
 
@@ -165,8 +160,9 @@ namespace AnneysEmpire
 		/// </summary>
 		/// <param name="t"></param>
 		/// <returns></returns>
-		public static Matrix Transpose(Matrix t)
+		public Matrix Transpose()
 		{
+			Matrix t = this;
 			Matrix u = new Matrix(t._columns, t._rows);
 
 			for (int i = 0; i < t._rows; i++)
@@ -216,13 +212,20 @@ namespace AnneysEmpire
 		}
 
 		/// <summary>
-		/// Have a matrix multiply another matrix.
+		/// Adds the specified b. Apparently, there's this thing called broadcasting,
+		/// that adds a vector to every row, whether or not this is a good idea, I have no idea
+		/// at all. If the results dont yield, we'll try something else.
 		/// </summary>
-		/// <param name="b">The second matrix.</param>
-		/// <returns>The resulting matrix.</returns>
-		public Matrix Dot(Matrix b)
+		/// <param name="b">The b.</param>
+		public void Add(VectorN b)
 		{
-			return Dot(this, b);
+			for (int i = 0; i < _rows; i++)
+			{
+				for (int j = 0; j < _columns; j++)
+				{
+					_matrixDouble[i, j] += b[i];
+				}
+			}
 		}
 
 		/// <summary>
@@ -242,6 +245,7 @@ namespace AnneysEmpire
 
 			return this;
 		}
+
 		/// <summary>
 		/// Prints out the string representation or whatever.
 		/// </summary>

@@ -187,7 +187,7 @@ namespace AnneysEmpire
 			double total = 0;
 			foreach (var d in _vectorArray)
 			{
-				if(absolute)
+				if (absolute)
 				{
 					total += Math.Abs(d);
 				}
@@ -212,7 +212,6 @@ namespace AnneysEmpire
 			}
 
 			b = Matrix.Dot(m, b);
-
 			VectorN nv = new VectorN(b.Rows);
 
 			for (int i = 0; i < b.Rows; i++)
@@ -223,28 +222,6 @@ namespace AnneysEmpire
 			//return new vector here.
 			return nv;
 		}
-
-		// I'm not sure if this is correct.
-		//public static VectorN Product(Matrix m, VectorN v)
-		//{
-		//	if (m.Columns != v.Size)
-		//	{
-		//		throw new InvalidOperationException("Columns in 'm' must be EQUAL to Rows in 'v'.");
-		//	}
-
-		//	VectorN result = new VectorN(v.Size);
-
-		//	for (int i = 0; i < m.Rows; i++)
-		//	{
-		//		for (int j = 0; j < v.Size; j++)
-		//		{
-		//			result[j] += v[j] * m[i, j];
-		//			// Console.WriteLine("*  " + result[j]);
-		//		}
-		//	}
-
-		//	return result;
-		//}
 
 		/// <summary>
 		/// Outputs this vector result into a string or whatever.

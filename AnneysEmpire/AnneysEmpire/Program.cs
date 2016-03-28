@@ -34,7 +34,7 @@ namespace AnneysEmpire
 			//To do write unit test for my Matrix/Vector library
 
 			//TwoLayer.NeuralNetowrk();
-			//TwoLayerInternal.NeuralNetowrkWithAnnMath();
+			TwoLayerInternal.NeuralNetowrkWithAnnMath();
 			ThreeLayerNueralNet.RunNet();
 
 			//using (StreamWriter writer = new StreamWriter("out.txt"))
