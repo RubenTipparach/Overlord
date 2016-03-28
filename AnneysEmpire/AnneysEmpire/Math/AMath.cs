@@ -30,7 +30,7 @@ namespace AnneysEmpire
 		/// <returns>Result number.</returns>
 		public static double SigmoidLinear(double input)
 		{
-			return input * (1 - input);
+			return input * (1.0 - input);
 		}
 
 		/// <summary>

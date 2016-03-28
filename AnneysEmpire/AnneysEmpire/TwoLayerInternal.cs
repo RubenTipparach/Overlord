@@ -49,7 +49,7 @@ namespace AnneysEmpire
 				l1_delta = VectorN.Product(l1_error, 
 					VectorN.ApplyCustomOperation(AMath.SigmoidLinear, l1));
 
-				VectorN weights = VectorN.Product(Matrix.Transpose(l0), l1_delta);
+				VectorN weights = VectorN.Product(l0.Transpose(), l1_delta);
 				syn0 = VectorN.Add(syn0, weights);
 			}
 
