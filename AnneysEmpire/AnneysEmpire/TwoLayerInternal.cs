@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire
 {
+	/// <summary>
+	/// Same as the standard Two layer test neural network,
+	/// except it is using the proprietary ANN math libary.
+	/// </summary>
 	public class TwoLayerInternal
 	{
 		// creating API to handle matrix multiplication, maybe switch over to GPU subroutines

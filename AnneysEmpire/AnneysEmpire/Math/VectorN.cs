@@ -12,10 +12,22 @@ namespace AnneysEmpire
 	/// </summary>
 	public class VectorN
 	{
+		/// <summary>
+		/// The vector array.
+		/// </summary>
 		private Double[] _vectorArray;
 
+		/// <summary>
+		/// The vector size.
+		/// </summary>
 		private int _vSize;
 
+		/// <summary>
+		/// Gets the size.
+		/// </summary>
+		/// <value>
+		/// The size.
+		/// </value>
 		public int Size
 		{
 			get { return _vSize; }
@@ -41,6 +53,14 @@ namespace AnneysEmpire
 			_vSize = vectorArray.Length;
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="Double"/> with the specified i.
+		/// </summary>
+		/// <value>
+		/// The <see cref="Double"/>.
+		/// </value>
+		/// <param name="i">The i.</param>
+		/// <returns>A double.</returns>
 		public Double this[int i]
 		{
 			get
@@ -246,7 +266,18 @@ namespace AnneysEmpire
 		}
 	}
 
+	/// <summary>
+	/// A delegate function for apply a signature to the custom operation method.
+	/// </summary>
+	/// <param name="x">The x.</param>
+	/// <returns>Returns a modified double.</returns>
 	public delegate double ApplyDoubleFunction(double x);
 
+	/// <summary>
+	///  A delegate function for apply a signature to the custom operation method.
+	/// </summary>
+	/// <param name="x">The x.</param>
+	/// <param name="b">if set to <c>true</c> [b].</param>
+	/// <returns>Returns a modified double.</returns>
 	public delegate double ApplyDoubleFunctionWFlag(double x, bool b);
 }

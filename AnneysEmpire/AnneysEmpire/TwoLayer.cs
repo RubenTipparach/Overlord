@@ -8,10 +8,11 @@ using Matrix = AnneysEmpire.Matrix;
 
 namespace AnneysEmpire
 {
+	/// <summary>
+	/// Blah blah blah.
+	/// </summary>
 	public class TwoLayer
 	{
-		
-
 		//Simple two layer neural network.
 		public static void NeuralNetowrk()
 		{

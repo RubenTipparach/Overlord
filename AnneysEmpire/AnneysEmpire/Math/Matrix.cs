@@ -6,31 +6,80 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire
 {
-
+	/// <summary>
+	/// The Matrix class used for creating arbitrary NxM matrices, equipped with fancy math operations.
+	/// TODO: use some GPU library that could optimize this.
+	/// </summary>
 	public class Matrix
 	{
-		private Double[,] matrixDouble;
+		/// <summary>
+		/// The number of columns.
+		/// </summary>
+		private int _columns;
 
-		private int rows;
+		/// <summary>
+		/// The matrix 2D double array.
+		/// </summary>
+		private Double[,] _matrixDouble;
 
-		private int columns;
-
-		public int Rows
+		/// <summary>
+		/// The number of rows.
+		/// </summary>
+		private int _rows;
+		/// <summary>
+		/// The matrix constructor.
+		/// </summary>
+		/// <param name="n">Number of rows.</param>
+		/// <param name="m">Number of columns</param>
+		/// <param name="input">The matrix in double 2D array format.</param>
+		public Matrix(double[,] input)
 		{
-			get
-			{
-				return rows;
-			}
+			_matrixDouble = input;
+
+			_rows = input.GetLength(0);
+			_columns = input.GetLength(1);
 		}
 
+		/// <summary>
+		/// Creates an empty matrix
+		/// </summary>
+		/// <param name="n">Number of rows.</param>
+		/// <param name="m">Number of columns.</param>
+		public Matrix(int n, int m)
+		{
+			_matrixDouble = new double[n, m];
+
+			_rows = n;
+			_columns = m;
+		}
+
+		/// <summary>
+		/// Gets the columns.
+		/// </summary>
+		/// <value>
+		/// The columns.
+		/// </value>
 		public int Columns
 		{
 			get
 			{
-				return columns;
+				return _columns;
 			}
 		}
 
+		/// <summary>
+		/// Gets the rows.
+		/// </summary>
+		/// <value>
+		/// The rows.
+		/// </value>
+		public int Rows
+		{
+			get
+			{
+				return _rows;
+			}
+		}
 		/// <summary>
 		/// 
 		/// </summary>
@@ -41,123 +90,31 @@ namespace AnneysEmpire
 		{
 			get
 			{
-				return matrixDouble[i, j];
+				return _matrixDouble[i, j];
 			}
 
 			set
 			{
-				matrixDouble[i, j] = value;
+				_matrixDouble[i, j] = value;
 			}
 		}
-
 		/// <summary>
-		/// The matrix constructor.
+		/// Uses a callback function for each of the elements in the Matrix.
 		/// </summary>
-		/// <param name="n">Number of rows.</param>
-		/// <param name="m">Number of columns</param>
-		/// <param name="input">The matrix in double 2D array format.</param>
-		public Matrix(double[,] input)
+		/// <param name="adf">The function</param>
+		public static Matrix ApplyCustomOperation(ApplyDoubleFunction adf, Matrix a)
 		{
-			matrixDouble = input;
+			Matrix result = new Matrix(a.Rows, a.Columns);
 
-			rows = input.GetLength(0);
-			columns = input.GetLength(1);
-		}
-
-		/// <summary>
-		/// Creates an empty matrix
-		/// </summary>
-		/// <param name="n">Number of rows.</param>
-		/// <param name="m">Number of columns.</param>
-		public Matrix(int n, int m)
-		{
-			matrixDouble = new double[n, m];
-
-			rows = n;
-			columns = m;
-		}
-
-		/// <summary>
-		/// Scales the matrix according to 'x' value.
-		/// </summary>
-		/// <param name="x">The scalar value</param>
-		/// <returns>A reference of self in case you want to do something else with it.</returns>
-		public Matrix Scalar(double x)
-		{
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < a.Rows; i++)
 			{
-				for (int j = 0; j < columns; j++)
+				for (int j = 0; j < a.Columns; i++)
 				{
-					matrixDouble[i, j] *= x;
+					result[i, j] = adf(a[i, j]);
 				}
 			}
 
-			return this;
-		}
-
-		/// <summary>
-		/// Transpose operation of a vector.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <returns></returns>
-		public static Matrix Transpose(Matrix t)
-		{
-			Matrix u = new Matrix(t.columns, t.rows);
-
-			for (int i = 0; i < t.rows; i++)
-			{
-				for (int j = 0; j < t.columns; j++)
-				{
-					u[j, i] = t[i, j];
-				}
-			}
-
-			return u;
-		}
-
-		/// <summary>
-		/// Have a matrix multiply another matrix.
-		/// </summary>
-		/// <param name="b">The second matrix.</param>
-		/// <returns>The resulting matrix.</returns>
-		public Matrix Dot(Matrix b)
-		{
-			return Dot(this, b);
-		}
-
-		/// <summary>
-		/// Add x value to our current matrix
-		/// </summary>
-		/// <param name="x"></param>
-		public void Add(double x)
-		{
-			for (int i = 0; i < rows; i++)
-			{
-				for (int j = 0; j < columns; j++)
-				{
-					matrixDouble[i, j] += x;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Add one matrix to another.
-		/// </summary>
-		/// <param name="b"></param>
-		public void Add(Matrix b)
-		{
-			if (this.columns != b.columns || this.rows != b.rows)
-			{
-				throw new InvalidOperationException("Current Columns/rows must be EQUAL to Columns/rows in 'b'.");
-			}
-
-			for (int i = 0; i < rows; i++)
-			{
-				for (int j = 0; j < columns; j++)
-				{
-					matrixDouble[i, j] += b[i, j];
-				}
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -168,20 +125,20 @@ namespace AnneysEmpire
 		/// <returns></returns>
 		public static Matrix Dot(Matrix a, Matrix b)
 		{
-			if (a.columns != b.Rows)
+			if (a._columns != b.Rows)
 			{
 				throw new InvalidOperationException("Columns in 'a' must be EQUAL to Rows in 'b'.");
 			}
 
-			Matrix c = new Matrix(a.rows, b.columns);
+			Matrix c = new Matrix(a._rows, b._columns);
 
-			for (int i = 0; i < c.rows; i++)
+			for (int i = 0; i < c._rows; i++)
 			{
-				for (int j = 0; j < c.columns; j++)
+				for (int j = 0; j < c._columns; j++)
 				{
 					double result = 0;
 
-					for (int k = 0; k < a.columns; k++)
+					for (int k = 0; k < a._columns; k++)
 					{
 						// Iteratre through each column of A, multiplying it by each column of B.
 						//if ((i + j) % 2 == 0)
@@ -204,24 +161,87 @@ namespace AnneysEmpire
 		}
 
 		/// <summary>
-		/// Uses a callback function for each of the elements in the Matrix.
+		/// Transpose operation of a vector.
 		/// </summary>
-		/// <param name="adf">The function</param>
-		public static Matrix ApplyCustomOperation(ApplyDoubleFunction adf, Matrix a)
+		/// <param name="t"></param>
+		/// <returns></returns>
+		public static Matrix Transpose(Matrix t)
 		{
-			Matrix result = new Matrix(a.Rows, a.Columns);
+			Matrix u = new Matrix(t._columns, t._rows);
 
-			for (int i = 0; i < a.Rows; i++)
+			for (int i = 0; i < t._rows; i++)
 			{
-				for (int j = 0; j < a.Columns; i++)
+				for (int j = 0; j < t._columns; j++)
 				{
-					result[i, j] = adf(a[i, j]);
+					u[j, i] = t[i, j];
 				}
 			}
 
-			return result;
+			return u;
 		}
 
+		/// <summary>
+		/// Add x value to our current matrix
+		/// </summary>
+		/// <param name="x"></param>
+		public void Add(double x)
+		{
+			for (int i = 0; i < _rows; i++)
+			{
+				for (int j = 0; j < _columns; j++)
+				{
+					_matrixDouble[i, j] += x;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Add one matrix to another.
+		/// </summary>
+		/// <param name="b"></param>
+		public void Add(Matrix b)
+		{
+			if (this._columns != b._columns || this._rows != b._rows)
+			{
+				throw new InvalidOperationException("Current Columns/rows must be EQUAL to Columns/rows in 'b'.");
+			}
+
+			for (int i = 0; i < _rows; i++)
+			{
+				for (int j = 0; j < _columns; j++)
+				{
+					_matrixDouble[i, j] += b[i, j];
+				}
+			}
+		}
+
+		/// <summary>
+		/// Have a matrix multiply another matrix.
+		/// </summary>
+		/// <param name="b">The second matrix.</param>
+		/// <returns>The resulting matrix.</returns>
+		public Matrix Dot(Matrix b)
+		{
+			return Dot(this, b);
+		}
+
+		/// <summary>
+		/// Scales the matrix according to 'x' value.
+		/// </summary>
+		/// <param name="x">The scalar value</param>
+		/// <returns>A reference of self in case you want to do something else with it.</returns>
+		public Matrix Scalar(double x)
+		{
+			for (int i = 0; i < _rows; i++)
+			{
+				for (int j = 0; j < _columns; j++)
+				{
+					_matrixDouble[i, j] *= x;
+				}
+			}
+
+			return this;
+		}
 		/// <summary>
 		/// Prints out the string representation or whatever.
 		/// </summary>
@@ -233,26 +253,26 @@ namespace AnneysEmpire
 			int longestStr = 1;
 
 			// fun format stuff, find the largest numerical length, scale all this to that thing...
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < _rows; i++)
 			{
-				for (int j = 0; j < columns; j++)
+				for (int j = 0; j < _columns; j++)
 				{
-					if (longestStr < matrixDouble[i, j].ToString().Length)
+					if (longestStr < _matrixDouble[i, j].ToString().Length)
 					{
-						longestStr = matrixDouble[i, j].ToString().Length;
+						longestStr = _matrixDouble[i, j].ToString().Length;
 					}
 				}
 			}
 
 			// Append watever element is found.
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < _rows; i++)
 			{
 				result += "[ ";
 
-				for (int j = 0; j < columns; j++)
+				for (int j = 0; j < _columns; j++)
 				{
-					int deltaStrLength = longestStr - matrixDouble[i, j].ToString().Length;
-					result += matrixDouble[i, j] + " " + "".PadRight(deltaStrLength, ' ');
+					int deltaStrLength = longestStr - _matrixDouble[i, j].ToString().Length;
+					result += _matrixDouble[i, j] + " " + "".PadRight(deltaStrLength, ' ');
 				}
 
 				result += "]\n";
