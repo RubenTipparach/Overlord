@@ -8,6 +8,9 @@ namespace AnneysEmpire
 {
 	public class ThreeLayerNueralNet
 	{
+		/// <summary>
+		/// Runs the Three layer test neural network.
+		/// </summary>
 		public static void RunNet()
 		{
 			//Initialize example matrices to teach neural net.

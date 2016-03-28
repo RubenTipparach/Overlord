@@ -56,7 +56,6 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThreeLayer.cs" />
     <Compile Include="ThreeLayerNueralNet.cs" />
     <Compile Include="TwoLayer.cs" />
     <Compile Include="TwoLayerInternal.cs" />
