@@ -177,13 +177,28 @@ namespace AnneysEmpire
 			return result;
 		}
 
-		//public void Product(Matrix m)
-		//{
-		//	VectorN result = Product(m, this);
-		//	_vectorArray = result._vectorArray;
-		//	_vSize = result._vSize;
-		//}
+		/// <summary>
+		/// Calculates the average of all the numbers.
+		/// </summary>
+		/// <param name="absolute">if set to <c>true</c> [absolute].</param>
+		/// <returns>The mean.</returns>
+		public double Mean(bool absolute = false)
+		{
+			double total = 0;
+			foreach (var d in _vectorArray)
+			{
+				if(absolute)
+				{
+					total += Math.Abs(d);
+				}
+				else
+				{
+					total += d;
+				}
+			}
 
+			return total/_vSize;
+		}
 
 		public static VectorN Product(Matrix m, VectorN v)
 		{
