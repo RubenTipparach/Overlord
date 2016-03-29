@@ -22,7 +22,7 @@ namespace AnneysEmpire
 					{1,0,1},
 					{1,1,1}});
 
-			VectorN yArray = new VectorN(new double[4] { 0, 0, 1, 1 });
+			VectorN yArray = new VectorN(new double[4] { 0, 1, 1, 0 });
 
 			// fill wieghted array with random weights,
 			// and teach it to conform
@@ -86,6 +86,6 @@ namespace AnneysEmpire
 					Console.WriteLine("syn1: " + syn1);
 				}
 			}
-        }
+		}
 	}
 }

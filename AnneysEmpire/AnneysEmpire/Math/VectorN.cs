@@ -200,6 +200,12 @@ namespace AnneysEmpire
 			return total/_vSize;
 		}
 
+		/// <summary>
+		/// Takes the product of a Matrix and vector, and returns a vector of Matrix rows in size.
+		/// </summary>
+		/// <param name="m">Input matrix.</param>
+		/// <param name="v">Input vector.</param>
+		/// <returns>Result vector.</returns>
 		public static VectorN Product(Matrix m, VectorN v)
 		{
 			// special private hack ;)
