@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace AnneysEmpire
 {
 	
-	public class Aoe2AiGenerator 
+	public class TestingNdn 
 	{
 		public static double PercentComplete = 0;
-		public Aoe2AiGenerator(StreamWriter writer)
+		public TestingNdn(StreamWriter writer)
 		{
 
 			TrainingSample sample = new TrainingSample(
