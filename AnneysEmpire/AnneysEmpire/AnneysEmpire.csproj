@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aoe2AiGenerator.cs" />
     <Compile Include="Math\AMath.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Program.cs" />
@@ -63,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NeuronDotNet\Core\Core.csproj">
+      <Project>{d5b56684-0c33-4195-b3d6-d1576b739e42}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

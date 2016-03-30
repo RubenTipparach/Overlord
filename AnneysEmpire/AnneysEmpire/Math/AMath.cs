@@ -22,7 +22,7 @@ namespace AnneysEmpire
 			return 1.0 / (1.0 + Math.Exp(-input));
 		}
 
-		/// <summary>
+		/// <summary>n
 		/// Sigmoid with derivitive flag. (linear when: derive = false)
 		/// </summary>
 		/// <param name="input">The input.</param>

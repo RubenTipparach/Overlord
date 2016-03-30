@@ -36,13 +36,15 @@ namespace AnneysEmpire
 			//TwoLayer.NeuralNetowrk();
 			TwoLayerInternal.NeuralNetowrkWithAnnMath();
 			ThreeLayerNueralNet.RunNet();
+			TextWriter tmp = Console.Out;
 
-			//using (StreamWriter writer = new StreamWriter("out.txt"))
-			//{
-			//	Console.SetOut(writer);
-			//	Outputtofile();
-			//}
+			using (StreamWriter writer = new StreamWriter("out.txt"))
+			{
+				Console.SetOut(writer);
+                var ag = new Aoe2AiGenerator(writer);
+            }
 
+			Console.SetOut(tmp);
 			Console.ReadKey();
 		}
 
