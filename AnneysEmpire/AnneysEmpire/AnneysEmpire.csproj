@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aoe2AiGenerator.cs" />
+    <Compile Include="TestingNdn.cs" />
     <Compile Include="Math\AMath.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Program.cs" />

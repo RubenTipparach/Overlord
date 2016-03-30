@@ -41,7 +41,7 @@ namespace AnneysEmpire
 			using (StreamWriter writer = new StreamWriter("out.txt"))
 			{
 				Console.SetOut(writer);
-                var ag = new Aoe2AiGenerator(writer);
+                var ag = new TestingNdn(writer);
             }
 
 			Console.SetOut(tmp);
