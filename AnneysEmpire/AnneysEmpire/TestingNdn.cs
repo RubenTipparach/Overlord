@@ -14,6 +14,12 @@ namespace AnneysEmpire
 	public class TestingNdn 
 	{
 		public static double PercentComplete = 0;
+
+		/// <summary>
+		/// This constructs a training procedure for standard backpropagation techniques.
+		/// More advanced ones will be used as seen in the example.
+		/// </summary>
+		/// <param name="writer"></param>
 		public TestingNdn(StreamWriter writer)
 		{
 
@@ -24,7 +30,7 @@ namespace AnneysEmpire
 			//We might make a gui for this later.
 
 			int numberOfNeurons = 3;
-			double learningRate = 0.25;
+			double learningRate = 0.5;
 			int numberOfCycles = 10000;
 
 			double[] errorList = new double[numberOfCycles];
@@ -67,8 +73,21 @@ namespace AnneysEmpire
 			// errorList => for plotting stuff.
 			for (int i = 0; i < numberOfCycles; i++)
 			{
-				Console.WriteLine(errorList[i]);
+				//Console.WriteLine(errorList[i]);
 			}
+
+			double[] outputResult = network.OutputLayer.GetOutput();
+			Console.WriteLine("final output");
+
+			double[] r1 = new double[] { 0, 0 };
+			double[] r2 = new double[] { 0, 1 };
+			double[] r3 = new double[] { 1, 0 };
+			double[] r4 = new double[] { 1, 1 };
+
+			Console.WriteLine(" 0 0 => " + network.Run(r1)[0]);
+			Console.WriteLine(" 0 1 => " + network.Run(r2)[0]);
+			Console.WriteLine(" 1 0 => " + network.Run(r3)[0]);
+			Console.WriteLine(" 1 1 => " + network.Run(r4)[0]);
 		}
 	}
 }
