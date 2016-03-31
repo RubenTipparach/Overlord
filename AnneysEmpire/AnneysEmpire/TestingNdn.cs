@@ -28,7 +28,6 @@ namespace AnneysEmpire
 				new double[] { });
 
 			//We might make a gui for this later.
-
 			int numberOfNeurons = 3;
 			double learningRate = 0.5;
 			int numberOfCycles = 10000;
