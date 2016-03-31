@@ -38,14 +38,17 @@ namespace AnneysEmpire
 			//ThreeLayerNueralNet.RunNet();
 			TextWriter tmp = Console.Out;
 
-			using (StreamWriter writer = new StreamWriter("out.txt"))
-			{
-				Console.SetOut(writer);
-                var ag = new TestingNdn(writer);
-            }
+            //using (StreamWriter writer = new StreamWriter("out.txt"))
+            //{
+            //    Console.SetOut(writer);
+            //    var ag = new TestingNdn(writer);
+            //}
+
+            // Default constructor for whatever stuff.
+            var ag = new TestNdn2(5, 10, 1);
 
 			Console.SetOut(tmp);
-			//Console.ReadKey();
+			Console.ReadKey();
 		}
 	}
 }
