@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AnneysEmpire.Learning;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +46,11 @@ namespace AnneysEmpire
             //}
 
             // Default constructor for whatever stuff.
-            var ag = new TestNdn2(5, 10, 1);
+            //var ag = new TestNdn2(5, 10, 1);
+
+            AiTrainingModule.Test("C:\\AnnAoe2\\AnneysEmpire\\AnneysEmpire\\Data\\data.csv",5,10,4);
+
+
 
 			Console.SetOut(tmp);
 			Console.ReadKey();

@@ -53,6 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoastalRaidersAI.cs" />
+    <Compile Include="CoastalRaidersFuedalResourceManager.cs" />
+    <Compile Include="Learning\AiTrainingModule.cs" />
+    <Compile Include="Learning\SupervisedLearningSet.cs" />
+    <Compile Include="Learning\UnsupervisedLearningSet.cs" />
     <Compile Include="TestingNdn.cs" />
     <Compile Include="Math\AMath.cs" />
     <Compile Include="Math\Matrix.cs" />
@@ -66,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\data.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NeuronDotNet\Core\Core.csproj">
