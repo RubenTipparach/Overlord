@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire.Learning
 {
-    public class AiTrainingModule
-    {
-        /// <summary>
+	public class AiTrainingModule
+	{
+		/// <summary>
 		/// Created a bullshit method to train bullshit results.
 		/// </summary>
 		/// <param name="writer"></param>
 		public static void Test(
-            string file,
+			string file,
 			int numberOfInputNeurons,
 			int numberOfHiddenNeurons,
 			int numberOfOutputNeurons,
@@ -45,34 +45,32 @@ namespace AnneysEmpire.Learning
 			BackpropagationNetwork network = new BackpropagationNetwork(inputLayer, outputLayer);
 			network.SetLearningRate(learningRate);
 
-			TrainingSet trainingSet = new TrainingSet(5, 4);
+			TrainingSet trainingSet = new TrainingSet(10, 8);
 
-            using (StreamReader reader = new StreamReader(file))
-            {
-                Console.SetIn(reader);
-                String line = "";
-                //trainingSet.Add(new TrainingSample(new double[] { 0, 0, 0, 0, 1 }, new double[1] { 1 }));
-                while((line = reader.ReadLine())!= null)
-                {
-                    String[] array = line.Split(',');
-                    double[] inputArray = new double[5];
-                    double[] outputArray = new double[4];
+			using (StreamReader reader = new StreamReader(file))
+			{
+				Console.SetIn(reader);
+				String line = "";
+				//trainingSet.Add(new TrainingSample(new double[] { 0, 0, 0, 0, 1 }, new double[1] { 1 }));
+				while((line = reader.ReadLine())!= null)
+				{
+					String[] array = line.Split(',');
+					double[] inputArray = new double[10];
+					double[] outputArray = new double[8];
 
-                    for(int i = 0; i < 5; i++)
-                    {
-                        inputArray[i] = Convert.ToDouble(array[i]);
-                    }
+					for(int i = 0; i < 10; i++)
+					{
+						inputArray[i] = Convert.ToDouble(array[i]);
+					}
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        outputArray[i] = Convert.ToDouble(array[i+6]);
-                    }
+					for (int i = 0; i < 8; i++)
+					{
+						outputArray[i] = Convert.ToDouble(array[i+11]);
+					}
 
-                    trainingSet.Add(new TrainingSample(inputArray, outputArray));
-                }
-            }
-
-
+					trainingSet.Add(new TrainingSample(inputArray, outputArray));
+				}
+			}
 
 			double max = 0;
 
@@ -99,9 +97,16 @@ namespace AnneysEmpire.Learning
 			//  }
 
 			double[] outputResult = network.OutputLayer.GetOutput();
-			Console.WriteLine("final output");
 
 
+			outputResult = network.Run(new double[] { 0.47, 0.41, 0.12, 0.05, 0.1, 0.5, 0.1, 0.1, 0.05, 0.1 });
+			
+			foreach( var d in outputResult)
+			{
+				Console.WriteLine("output: " + d);
+			}
+
+			// Console.WriteLine("final output");
 		}
-    }
+	}
 }
