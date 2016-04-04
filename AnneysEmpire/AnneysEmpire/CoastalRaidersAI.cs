@@ -76,19 +76,6 @@ namespace AnneysEmpire
 		{
 			resourceOnlyAiInputs = new double[]
 			{
-				//dark ages stuff
-				sn_food_gatherer_percentage_da1/100.0, 
-				sn_wood_gatherer_percentage_da1/100.0,
-				sn_percent_civilian_builders_da1/100.0,
-  
-				sn_food_gatherer_percentage_da2/100.0,
-				sn_wood_gatherer_percentage_da2/100.0,
-				sn_gold_gatherer_percentage_da2/100.0,
-				sn_percent_civilian_builders_da2/100.0,
-
-				sn_food_gatherer_percentage_da3/100.0,
-				sn_wood_gatherer_percentage_da3/100.0,
-
 				//fuedal age.
 				sn_food_gatherer_percentage_fa/100.0,
 				sn_wood_gatherer_percentage_fa/100.0,
