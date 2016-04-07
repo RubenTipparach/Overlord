@@ -48,7 +48,7 @@ namespace AnneysEmpire
             // Default constructor for whatever stuff.
             //var ag = new TestNdn2(5, 10, 1);
 
-			AiTrainingModule.Test("D:\\annaoe2\\AnneysEmpire\\AnneysEmpire\\Data\\CR_Manual_data2.csv", 10, 10, 8);
+			AiTrainingModule.Test("C:\\annaoe2\\AnneysEmpire\\AnneysEmpire\\Data\\CR_Manual_data2.csv", 10, 10, 8);
 
 			Console.SetOut(tmp);
 			Console.ReadKey();

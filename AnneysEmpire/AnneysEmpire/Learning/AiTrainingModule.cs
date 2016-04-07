@@ -47,6 +47,8 @@ namespace AnneysEmpire.Learning
 
 			TrainingSet trainingSet = new TrainingSet(10, 8);
 
+            // Do I care about reader? Nah, probably not.
+            var inDefaule = Console.In;
 			using (StreamReader reader = new StreamReader(file))
 			{
 				Console.SetIn(reader);
@@ -95,6 +97,9 @@ namespace AnneysEmpire.Learning
 			// {
 				//Console.WriteLine(errorList[i]);
 			//  }
+
+            // print out the error list for scientific evaluation.
+            StreamUtilities.DumpData("dumpErrorValues.txt", errorList);
 
 			double[] outputResult = network.OutputLayer.GetOutput();
 
