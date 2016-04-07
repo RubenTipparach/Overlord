@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire.Learning
 {
+    /// <summary>
+    /// How do I even?
+    /// </summary>
     class UnsupervisedLearningSet
     {
     }

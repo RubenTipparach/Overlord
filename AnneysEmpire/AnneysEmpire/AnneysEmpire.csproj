@@ -57,6 +57,7 @@
     <Compile Include="Learning\AiTrainingModule.cs" />
     <Compile Include="Learning\SupervisedLearningSet.cs" />
     <Compile Include="Learning\UnsupervisedLearningSet.cs" />
+    <Compile Include="StreamUtilities.cs" />
     <Compile Include="TestingNdn.cs" />
     <Compile Include="Math\AMath.cs" />
     <Compile Include="Math\Matrix.cs" />
