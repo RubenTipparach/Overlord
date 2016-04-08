@@ -1,5 +1,6 @@
 ﻿using AnneysEmpire.Learning;
 using Microsoft.Xna.Framework;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire
 {
+	
+
 	/// <summary>
 	/// This program is designed to take in input from spreadsheet or
 	/// database system, and generate AI code for Age of Empires 2: Age of Kings.
@@ -23,11 +26,21 @@ namespace AnneysEmpire
 	public class Program
 	{
 		/// <summary>
+		/// The logger. This logging utility looks a lot like the ones I wrote back when I had a job.
+		/// I'll feel right at home with this little thing :)
+		/// </summary>
+		/// <remarks>
+		/// https://github.com/nlog/nlog/wiki/Tutorial
+		/// </remarks>
+		public static Logger logger = LogManager.GetCurrentClassLogger();
+
+		/// <summary>
 		/// The main execution method.
 		/// </summary>
 		/// <param name="args">The arguments.</param>
 		public static void Main(string[] args)
 		{
+
 			// This is how I like my consoles.
 			Console.BackgroundColor = ConsoleColor.DarkBlue;
 			Console.Clear();
