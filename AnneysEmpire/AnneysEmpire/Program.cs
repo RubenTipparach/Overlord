@@ -57,6 +57,13 @@ namespace AnneysEmpire
 			foreach (var gd in gameData)
 			{
 				Console.WriteLine(gd.ToString());
+
+				// Now we will generate each AI its own file.
+				if (gd.AiName == "G4-Coastal-Raiders_Learnt")
+				{
+					gd.ClonePrefix = "_" + gd.GameNumber.ToString();
+					gd.GenerateNewAiFile("Data");
+				}
 			}
 
 			Console.SetOut(tmp);
