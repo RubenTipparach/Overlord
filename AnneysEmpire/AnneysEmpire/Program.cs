@@ -21,31 +21,43 @@ namespace AnneysEmpire
 	/// can defeat either another AI or another player.
 	/// 
 	/// NOTE: As proof of concept, we may need to generate more deterministic models for this,
-	///  like simulating a game, and then running it to get better test results.
+	/// like simulating a game, and then running it to get better test results.
 	/// </summary>
 	public class Program
 	{
 		/// <summary>
 		/// The logger. This logging utility looks a lot like the ones I wrote back when I had a job.
-		/// I'll feel right at home with this little thing :)
+		/// I'll feel right at home with this little guy :)
 		/// </summary>
 		/// <remarks>
 		/// https://github.com/nlog/nlog/wiki/Tutorial
 		/// </remarks>
-		public static Logger logger = LogManager.GetCurrentClassLogger();
+		public Logger Logger
+		{
+			get
+			{
+				return _logger;
+			}
+		}
 
+		/// <summary>
+		/// The logger.
+		/// </summary>
+		private static Logger _logger = LogManager.GetCurrentClassLogger();
+		
 		/// <summary>
 		/// The main execution method.
 		/// </summary>
 		/// <param name="args">The arguments.</param>
 		public static void Main(string[] args)
 		{
-
+			_logger.Info("Started executable.");
+			
 			// This is how I like my consoles.
 			Console.BackgroundColor = ConsoleColor.DarkBlue;
 			Console.Clear();
 
-			//To do write unit test for my Matrix/Vector library
+			//To do write unit test for my Matrix/Vector library, maybe not since I went with a framework instead.
 
 			//TwoLayer.NeuralNetowrk();
 			//TwoLayerInternal.NeuralNetowrkWithAnnMath();
