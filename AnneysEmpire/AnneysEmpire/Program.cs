@@ -39,16 +39,25 @@ namespace AnneysEmpire
 			//ThreeLayerNueralNet.RunNet();
 			TextWriter tmp = Console.Out;
 
-            //using (StreamWriter writer = new StreamWriter("out.txt"))
-            //{
-            //    Console.SetOut(writer);
-            //    var ag = new TestingNdn(writer);
-            //}
+			//using (StreamWriter writer = new StreamWriter("out.txt"))
+			//{
+			//    Console.SetOut(writer);
+			//    var ag = new TestingNdn(writer);
+			//}
 
-            // Default constructor for whatever stuff.
-            //var ag = new TestNdn2(5, 10, 1);
+			// Default constructor for whatever stuff.
+			//var ag = new TestNdn2(5, 10, 1);
 
-			AiTrainingModule.Test("C:\\annaoe2\\AnneysEmpire\\AnneysEmpire\\Data\\CR_Manual_data2.csv", 10, 10, 8);
+			//AiTrainingModule.Test("C:\\annaoe2\\AnneysEmpire\\AnneysEmpire\\Data\\CR_Manual_data2.csv", 10, 10, 8);
+
+			StreamUtilities.ConnectToDatabase();
+
+			var gameData = StreamUtilities.GetAiDataSet();
+
+			foreach (var gd in gameData)
+			{
+				Console.WriteLine(gd.ToString());
+			}
 
 			Console.SetOut(tmp);
 			Console.ReadKey();

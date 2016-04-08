@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire.Learning
 {
-    class SupervisedLearningSet
-    {
-    }
+	class SupervisedLearningSetDao
+	{
+	}
 }
