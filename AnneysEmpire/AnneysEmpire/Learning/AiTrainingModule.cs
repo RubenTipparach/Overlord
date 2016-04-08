@@ -9,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire.Learning
 {
+	/// <summary>
+	/// This training module serves as an automated program to collect, analyze data,
+	/// and improve the AI knowledge base. Players should find a statistical edge when
+	/// testing this AI, as the AI will learn from its mistakes and generate a new script
+	/// after every game. Getting slightly better...
+	/// 
+	/// Should also include a randomizer mode so we can autonomously gather data after every
+	/// round. This is still a todo kinda thing...
+	/// </summary>
 	public class AiTrainingModule
 	{
 		private string _aoe2Directory;
