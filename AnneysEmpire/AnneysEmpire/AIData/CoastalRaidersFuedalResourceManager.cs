@@ -8,9 +8,26 @@ namespace AnneysEmpire
 {
     public class CoastalRaidersFuedalResourceManager
     {
+		/// <summary>
+		/// The ai mutable code.
+		/// </summary>
+		private static readonly string AI_Mutable_Code = @"
+(defrule
+	(current-age == feudal-age)
+=>
+	(set-strategic-number sn-food-gatherer-percentage {0})
+	(set-strategic-number sn-wood-gatherer-percentage {1})
+	(set-strategic-number sn-gold-gatherer-percentage {2})
+	(set-strategic-number sn-stone-gatherer-percentage {3})
+	(set-strategic-number sn-percent-civilian-builders {4})
+	(disable-self)
+)
+";
+
 		// Random ai atrributes.
-		private String _aiName;
+		private string _aiName;
 		private int _gameNumber;
+		private string _clonePrefix = "";
 
         //input
         private double _sn_food_gatherer_percentage_fa;
@@ -24,6 +41,20 @@ namespace AnneysEmpire
         private int _wood_Score;
         private int _stone_Score;
         private int _gold_Score;
+
+		/// <summary>
+		/// Sets the enumerated clone.
+		/// </summary>
+		/// <value>
+		/// The enumerated clone.
+		/// </value>
+		public string ClonePrefix
+		{
+			set
+			{
+				_clonePrefix = value;
+			}
+		}
 
         /// <summary>
         /// Returns an array of input
@@ -60,6 +91,34 @@ namespace AnneysEmpire
                 };
             }
         }
+
+		/// <summary>
+		/// Gets the name of the ai.
+		/// </summary>
+		/// <value>
+		/// The name of the ai.
+		/// </value>
+		public string AiName
+		{
+			get
+			{
+				return _aiName;
+			}
+		}
+
+		/// <summary>
+		/// Gets the game number.
+		/// </summary>
+		/// <value>
+		/// The game number.
+		/// </value>
+		public int GameNumber
+		{
+			get
+			{
+				return _gameNumber;
+			}
+		}
 
 		/// <summary>
 		/// Constructor for the ai training set.
@@ -106,12 +165,19 @@ namespace AnneysEmpire
 		/// <summary>
 		/// Generates the new ai file.
 		/// </summary>
-		/// <param name="fileName">Name of the file.</param>
 		/// <param name="filePath">The file path.</param>
 		/// <returns></returns>
-		public bool GenerateNewAiFile(String fileName, String filePath)
+		public bool GenerateNewAiFile(string filePath)
 		{
-			throw new NotImplementedException("LOL");
+			string modifiablePart = string.Format(
+				AI_Mutable_Code,
+				Convert.ToInt32(_sn_food_gatherer_percentage_fa * 100),
+				Convert.ToInt32(_sn_wood_gatherer_percentage_fa * 100),
+				Convert.ToInt32(_sn_gold_gatherer_percentage_fa * 100),
+				Convert.ToInt32(_sn_stone_gatherer_percentage_fa * 100),
+				Convert.ToInt32(_sn_percent_civilian_builders_fa * 100));
+
+			return BuildAIScriptParts(modifiablePart, filePath + "\\" + AiName + _clonePrefix + ".per");
 		}
 
 		/// <summary>
@@ -120,16 +186,32 @@ namespace AnneysEmpire
 		/// <param name="fileName">Name of the file.</param>
 		/// <param name="filePath">The file path.</param>
 		/// <returns></returns>
-		public bool ResetDefauleAiFile(String fileName, String filePath)
+		public bool ResetDefauleAiFile(string filePath)
 		{
-			throw new NotImplementedException("LOL");
+			string modifiablePart = string.Format(AI_Mutable_Code, 47, 41, 12, 5, 10);
+			return BuildAIScriptParts(modifiablePart, filePath + "\\" + AiName + _clonePrefix + ".per");
 		}
 
-		private StringBuilder[] GetAIScriptParts()
+		/// <summary>
+		/// Builds the ai script parts.
+		/// </summary>
+		/// <param name="mutatedInput">The mutated input.</param>
+		/// <param name="filePathName">Name of the file path.</param>
+		/// <returns></returns>
+		private bool BuildAIScriptParts(string mutatedInput, string filePath)
 		{
-			String aiScriptString;
-			throw new NotImplementedException("LOL");
-		}
+			try
+			{
+				StreamUtilities.GenerateScript(filePath, mutatedInput, "Data\\CoastalRaiders_top_part.txt", "Data\\CoastalRaiders_bottom_part.txt");
+                return true;
+            }
+			catch (Exception e)
+			{
+				//log the exception or something...
+				throw e;
+				//return false;
+			}
+        }
 
 		/// <summary>
 		/// Returns a <see cref="System.String" /> that represents this instance.
@@ -164,8 +246,8 @@ namespace AnneysEmpire
 				(double)_stone_Score,
 				(double)_gold_Score,
 
-				_aiName,
-				_gameNumber);
+				AiName,
+				GameNumber);
         }
 	}      
 }          

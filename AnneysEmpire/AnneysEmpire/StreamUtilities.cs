@@ -11,6 +11,7 @@ namespace AnneysEmpire
     public static class StreamUtilities
     {
 		private static string ConnectionString = "Server=localhost; Port=3306; Database=aoenn; Uid=ruben; Pwd=ruben;";
+
 		/// <summary>
 		/// Only supports singular array at the moment, dumping complex data table is on my todo list.
 		/// </summary>
@@ -31,6 +32,41 @@ namespace AnneysEmpire
 
             Console.SetOut(outDefault);
         }
+
+		/// <summary>
+		/// Only supports singular array at the moment, dumping complex data table is on my todo list.
+		/// </summary>
+		/// <param name="filePathName"></param>
+		/// <param name="dataArray"></param>
+		public static void GenerateScript(string filePathName, string input, string topPart, string bottomPart)
+		{
+			var outDefault = Console.Out;
+
+			using (StreamWriter writer = new StreamWriter(filePathName))
+			{
+				Console.SetOut(writer);
+				using (StreamReader readerTop = new StreamReader(topPart))
+				using (StreamReader readerBottom = new StreamReader(bottomPart))
+				{
+					string line = "";
+					// Stream top line
+					while ((line = readerTop.ReadLine()) != null)
+					{
+						Console.WriteLine(line);
+					}
+
+					Console.WriteLine(input);
+
+					// Stream bottom lines
+					while ((line = readerBottom.ReadLine()) != null)
+					{
+						Console.WriteLine(line);
+					}
+				}
+			}
+
+			Console.SetOut(outDefault);
+		}
 
 		/// <summary>
 		/// Connects to database. Testing method to see if this actually works.
