@@ -1,0 +1,979 @@
+﻿
+(defrule
+	(current-age ==  castle-age)
+=>
+	(set-strategic-number sn-food-gatherer-percentage 30)
+	(set-strategic-number sn-wood-gatherer-percentage 32)
+	(set-strategic-number sn-gold-gatherer-percentage 33)
+	(set-strategic-number sn-stone-gatherer-percentage 6)
+	(set-strategic-number sn-number-forward-builders 4)
+	(set-strategic-number sn-maximum-town-size 100)
+	(disable-self)
+)
+
+(defrule
+	(current-age == imperial-age)
+=>
+	(set-strategic-number sn-food-gatherer-percentage 30)
+	(set-strategic-number sn-wood-gatherer-percentage 25)
+	(set-strategic-number sn-gold-gatherer-percentage 35)
+	(set-strategic-number sn-stone-gatherer-percentage 10)
+	(set-strategic-number sn-maximum-town-size 150)
+	(disable-self)
+)
+
+; ==========================
+; AGE ADVANCES
+; ==========================
+
+(defrule
+	(unit-type-count villager >= 25)
+	(can-research feudal-age)
+=>
+	(research feudal-age)
+)
+
+(defrule
+	(unit-type-count villager >= 40)
+	(can-research castle-age)
+=>
+	(research castle-age)
+	(attack-now)
+)
+
+(defrule
+	(research-completed castle-age)
+=>
+	(attack-now)
+	(disable-self)
+)
+
+(defrule
+	(unit-type-count villager >= 50)
+	(can-research imperial-age)
+=>
+	(research imperial-age)
+)
+
+(defrule
+	(research-completed imperial-age)
+=>
+	(enable-timer 1 600)
+	(attack-now)
+	(disable-self)
+)
+
+
+; ==========================
+; ECONOMY MAINTANENCE
+; ==========================
+
+(defrule
+	(building-type-count town-center < 2)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+
+(defrule
+	(building-type-count mill < 1)
+	(resource-found food)
+	(can-build mill)
+=>
+	(build mill)
+)
+
+(defrule
+	(dropsite-min-distance food > 10)
+	(can-build mill)
+=>
+	(build mill)
+)
+
+(defrule
+	(current-age == dark-age)
+	(idle-farm-count == 0)
+	(or
+		(food-amount <= 300)
+		(wood-amount >= 200)
+	)
+	(building-type-count lumber-camp >= 1)
+	(can-build farm)
+=>
+	(build farm)
+)
+
+(defrule
+	(current-age != dark-age)
+	(idle-farm-count == 0)
+	(can-build farm)
+=>
+	(build farm)
+)
+
+(defrule
+	(dropsite-min-distance wood > 5)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+
+(defrule
+	(dropsite-min-distance gold > 5)
+	(unit-type-count villager >= 10)
+	(resource-found gold)
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+
+(defrule
+	(current-age >= feudal-age)
+	(dropsite-min-distance stone > 5)
+	(resource-found stone)
+	(can-build mining-camp)
+=>
+	(build mining-camp)
+)
+
+(defrule
+	(current-age == imperial-age)
+	(can-build town-center)
+=>
+	(build town-center)
+)
+
+; =============================
+; HOUSES AND VILLAGERS
+; =============================
+
+(defrule
+	(housing-headroom < 3)
+	(population-headroom > 0)
+	(can-build house)
+=>
+	(build house)
+)
+
+(defrule
+	(current-age == dark-age)
+	(unit-type-count villager < 25)
+	(can-train villager)
+=>
+	(train villager)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count villager < 40)
+	(can-train villager)
+=>
+	(train villager)
+)
+
+(defrule
+	(current-age == castle-age)
+	(unit-type-count villager < 50)
+	(can-train villager)
+=>
+	(train villager)
+)
+
+; ==============================
+; DARK AGE RESEARCH
+; ==============================
+
+(defrule
+	(food-amount < 50)
+	(can-research ri-loom)
+=>
+	(research ri-loom)
+)
+
+; ==============================
+; DARK AGE BUILDINGS
+; ==============================
+
+(defrule
+	(current-age == dark-age)
+	(building-type-count outpost < 7)
+	(unit-type-count villager >= 15)
+	(can-build outpost)
+=>
+	(build outpost)
+)
+
+(defrule
+	(building-type-count barracks < 1)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(can-build dock)
+	(building-type-count dock < 1)
+=>
+	(build dock)
+)
+
+; ==============================
+; DARK AGE UNITS
+; ==============================
+
+(defrule
+	(unit-type-count fishing-ship < 2)
+	(current-age == dark-age)
+	(building-type-count lumber-camp >= 1)
+	(can-train fishing-ship)
+=>
+	(train fishing-ship)
+)
+
+(defrule
+	(unit-type-count militiaman-line < 5)
+	(can-train militiaman-line)
+=>
+	(train militiaman-line)
+)
+
+; ==============================
+; FEUDAL AGE RESEARCH
+; ==============================
+
+(defrule
+	(can-research ri-wheel-barrow)
+=>
+	(research ri-wheel-barrow)
+)
+
+(defrule
+	(can-research ri-man-at-arms)
+=>
+	(research ri-man-at-arms)
+)
+
+(defrule
+	(can-research ri-tracking)
+=>
+	(research ri-tracking)
+)
+
+(defrule
+	(can-research ri-double-bit-axe)
+=>
+	(research ri-double-bit-axe)
+)
+
+(defrule
+	(can-research ri-gold-mining)
+=>
+	(research ri-gold-mining)
+)
+
+(defrule
+	(can-research ri-stone-mining)
+=>
+	(research ri-stone-mining)
+)
+
+(defrule
+	(can-research ri-horse-collar)
+=>
+	(research ri-horse-collar)
+)
+
+(defrule
+	(can-research ri-cartography)
+=>
+	(research ri-cartography)
+)
+
+(defrule
+	(can-research ri-forging)
+=>
+	(research ri-forging)
+)
+
+(defrule
+	(can-research ri-scale-mail)
+=>
+	(research ri-scale-mail)
+)
+
+(defrule
+	(can-research ri-scale-barding)
+=>
+	(research ri-scale-barding)
+)
+
+(defrule
+	(can-research ri-fletching)
+=>
+	(research ri-fletching)
+)
+
+(defrule
+	(can-research ri-padded-archer-armor)
+=>
+	(research ri-padded-archer-armor)
+)
+
+(defrule
+	(can-research ri-bloodlines)
+=>
+	(research ri-bloodlines)
+)
+
+
+; ==============================
+; FEUDAL AGE BUILDIGNS
+; ==============================
+
+(defrule
+	(building-type-count blacksmith < 1)
+	(can-build blacksmith)
+=>
+	(build blacksmith)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(can-build watch-tower-line)
+=>
+	(build watch-tower-line)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(building-type-count archery-range < 1)
+	(can-build archery-range)
+=>
+	(build archery-range)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(building-type-count stable < 1)
+	(can-build stable)
+=>
+	(build stable)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(building-type-count barracks < 2)
+	(can-build barracks)
+=>
+	(build barracks)
+)
+
+(defrule
+	(building-type-count market < 1)
+	(can-build market)
+=>
+	(build market)
+)
+
+; ================================
+; FEUDAL AGE UNITS
+; ================================
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count fishing-ship < 5)
+	(can-train fishing-ship)
+=>
+	(train fishing-ship)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(wood-amount > 200)
+	(can-train fishing-ship)
+=>
+	(train fishing-ship)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count spearman-line < 5)
+	(can-train spearman-line)
+=>
+	(train spearman-line)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count militiaman-line < 10)
+	(can-train militiaman-line)
+=>
+	(train militiaman-line)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count archer-line < 5)
+	(can-train archer-line)
+=>
+	(train archer-line)
+)
+
+(defrule
+	(current-age == feudal-age)
+	(unit-type-count skirmisher-line < 5)
+	(can-train skirmisher-line)
+=>
+	(train skirmisher-line)
+)
+
+(defrule
+	(unit-type-count scout-cavalry-line < 5)
+	(can-train scout-cavalry-line)
+=>
+	(train scout-cavalry-line)
+)
+
+; ========================
+; CASTLE AGE RESEARCH
+; ========================
+
+(defrule
+	(can-research ri-iron-casting)
+=>
+	(research ri-iron-casting)
+)
+
+(defrule
+	(can-research ri-chain-mail)
+=>
+	(research ri-chain-mail)
+)
+
+(defrule
+	(can-research ri-chain-barding)
+=>
+	(research ri-chain-barding)
+)
+
+(defrule
+	(can-research ri-bodkin-arrow)
+=>
+	(research ri-bodkin-arrow)
+)
+
+(defrule
+	(can-research ri-leather-archer-armor)
+=>
+	(research ri-leather-archer-armor)
+)
+
+(defrule
+	(can-research ri-pikeman)
+=>
+	(research ri-pikeman)
+)
+
+(defrule
+	(can-research ri-long-swordsman)
+=>
+	(research ri-long-swordsman)
+)
+
+(defrule
+	(can-research ri-light-cavalry)
+=>
+	(research ri-light-cavalry)
+)
+
+(defrule
+	(can-research ri-crossbow)
+=>
+	(research ri-crossbow)
+)
+
+(defrule
+	(can-research ri-elite-skirmisher)
+=>
+	(research ri-elite-skirmisher)
+)
+
+(defrule
+	(can-research ri-hand-cart)
+=>
+	(research ri-hand-cart)
+)
+
+(defrule
+	(can-research ri-guard-tower)
+=>
+	(research ri-guard-tower)
+)
+
+; ========================
+; CASTLE AGE BUILDINGS
+; ========================
+
+(defrule
+	(can-build castle)
+	(building-type-count castle > 2)
+=>
+	(build-forward castle)
+)
+
+(defrule
+	(can-build castle)
+=>
+	(build castle)
+)
+
+(defrule
+	(building-type-count university < 1)
+	(can-build university)
+=>
+	(build university)
+)
+
+(defrule
+	(building-type-count monastery < 3)
+	(can-build monastery)
+=>
+	(build monastery)
+)
+
+(defrule
+	(can-build siege-workshop)
+	(building-type-count siege-workshop < 1)
+=>
+	(build siege-workshop)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(building-type-count dock < 3)
+	(can-build dock)
+=>
+	(build dock)
+)
+
+; ========================
+; CASTLE AGE ARMY
+; ========================
+
+(defrule
+	(can-train battering-ram-line)
+	(unit-type-count battering-ram-line < 5)
+=>
+	(train battering-ram-line)
+)
+
+(defrule
+	(unit-type-count eagle-warrior-line < 20)
+	(can-train eagle-warrior-line)
+=>
+	(train eagle-warrior-line)
+)
+
+(defrule
+	(current-age == castle-age)
+	(unit-type-count militiaman-line < 15)
+	(can-train militiaman-line)
+=>
+	(train militiaman-line)
+)
+
+(defrule
+	(unit-type-count knight-line < 10)
+	(can-train knight-line)
+=>
+	(train knight-line)
+)
+
+(defrule
+	(current-age == castle-age)
+	(can-train cavalry-archer-line)
+	(unit-type-count cavalry-archer-line < 10)
+=>
+	(train cavalry-archer-line)
+)
+
+(defrule
+	(can-train my-unique-unit-line)
+	(unit-type-count my-unique-unit-line < 12)
+=>
+	(train my-unique-unit-line)
+)
+
+(defrule
+	(unit-type-count monk < 10)
+	(can-train monk)
+=>
+	(train monk)
+)
+
+(defrule
+	(unit-type-count missionary < 5)
+	(can-train missionary)
+=>
+	(train missionary)
+)
+
+; ===============================
+; NAVAL MAINTANENCE
+; ===============================
+
+(defrule
+	(unit-type-count galley-line < 5)
+	(can-train galley-line)
+=>
+	(train galley-line)
+)
+
+(defrule
+	(current-age >= castle-age)
+	(can-train galley-line)
+	(unit-type-count galley-line < 7)
+=>
+	(train galley-line)
+)
+
+(defrule
+	(unit-type-count trade-cog < 2)
+	(can-train trade-cog)
+=>
+	(train trade-cog)
+)
+
+(defrule
+	(can-research ri-war-galley)
+=>	
+	(research ri-war-galley)
+)
+
+(defrule
+	(can-train longboat-line)
+	(unit-type-count longboat-line < 15)
+=>
+	(train longboat-line)
+)
+
+(defrule
+	(can-train turtle-ship-line)
+	(unit-type-count turtle-ship-line < 10)
+=>
+	(train turtle-ship-line)
+)
+
+(defrule
+	(can-research ri-elite-longboat)
+=>
+	(research ri-elite-longboat)
+)
+
+(defrule
+	(can-research ri-elite-turtle-ship)
+=>
+	(research ri-elite-turtle-ship)
+)
+
+(defrule
+	(can-research ri-cannon-galleon)
+=>
+	(research cannon-galleon)
+)
+
+(defrule
+	(can-research ri-careening)
+=>
+	(research ri-careening)
+)
+
+(defrule
+	(can-research ri-deck-guns)
+=>
+	(research ri-deck-guns)
+)
+
+(defrule
+	(can-research ri-dry-dock)
+=>
+	(research ri-dry-dock)
+)
+
+(defrule
+	(can-research ri-galleon)
+=>
+	(research galleon)
+)
+
+(defrule
+	(can-train cannon-galleon)
+	(unit-type-count cannon-galleon < 5)
+=>
+	(train cannon-galleon)
+)
+
+; ==========================
+; IMPERIAL ARMY MAINTANENCE
+; ==========================
+
+(defrule
+	(can-train trebuchet)
+	(unit-type-count trebuchet < 5)
+=>
+	(train trebuchet)
+)
+
+(defrule
+	(can-train militiaman-line)
+	(current-age == imperial-age)
+=>
+	(train militiaman-line)
+)
+
+(defrule
+	(can-train knight-line)
+	(current-age == imperial-age)
+=>
+	(train knight-line)
+)
+
+(defrule
+	(can-train monk)
+	(current-age == imperial-age)
+=>
+	(train monk)
+)
+
+(defrule
+	(can-train archer-line)
+	(current-age == imperial-age)
+=>
+	(train archer-line)
+)
+
+(defrule
+	(can-train cavalry-archer-line)
+	(current-age == imperial-age)
+=>
+	(train cavalry-archer-line)
+)
+
+(defrule
+	(can-train longboat-line)
+	(current-age == imperial-age)
+=>
+	(train longboat-line)
+)
+
+(defrule
+	(can-train galleon)
+	(current-age == imperial-age)
+=>
+	(train galleon)
+)
+
+(defrule
+	(can-train halberdier)
+=>
+	(train halberdier)
+)
+
+(defrule
+	(can-train hussar)
+=>
+	(train hussar)
+)
+
+; =========================
+; IMPERIAL UNIT UPGRADES
+; =========================
+
+(defrule
+	(can-research ri-siege-ram)
+=>
+	(research ri-siege-ram)
+)
+
+(defrule
+	(can-research ri-capped-ram)
+=>
+	(research ri-capped-ram)
+)
+
+(defrule
+	(can-research ri-champion)
+=>
+	(research ri-champion)
+)
+
+(defrule
+	(can-research ri-cavalier)
+=>
+	(research ri-cavalier)
+)
+
+(defrule
+	(can-research ri-heavy-cavalry-archer)
+=>
+	(research ri-heavy-cavalry-archer)
+)
+
+(defrule
+	(can-research ri-halberdier)
+=>
+	(research ri-halberdier)
+)
+
+(defrule
+	(can-research ri-hussar)
+=>
+	(research ri-hussar)
+)
+
+; ===========================
+; IMPERIAL FORWARD BUILDING
+; ===========================
+
+(defrule
+	(can-build barracks)
+	(current-age == imperial-age)
+	(building-type-count barracks < 5)
+=>
+	(build-forward barracks)
+)
+
+(defrule
+	(can-build stable)
+	(current-age == imperial-age)
+	(building-type-count stable < 5)
+=>
+	(build-forward stable)
+)
+
+(defrule
+	(can-build monastery)
+	(current-age == imperial-age)
+	(building-type-count monastery < 5)
+=>
+	(build-forward monastery)
+)
+
+; ===========================
+; IMPERIAL RESEARCH
+; ===========================
+
+(defrule
+	(can-research ri-plate-barding)
+=>
+	(research ri-plate-barding)
+)
+
+(defrule
+	(can-research ri-bracer)
+=>
+	(research ri-bracer)
+)
+
+(defrule
+	(can-research ri-blast-furnace)
+=>
+	(research ri-blast-furnace)
+)
+
+(defrule
+	(can-research ri-ring-archer-armor)
+=>
+	(research ri-ring-archer-armor)
+)
+
+(defrule
+	(can-research ri-plate-mail)
+=>
+	(research ri-plate-mail)
+)
+
+(defrule
+	(can-research ri-hoardings)
+=>
+	(research ri-hoardings)
+)
+
+; =======================
+; MONASTERY RESEARCH
+; =======================
+
+(defrule
+	(can-research ri-heresy)
+=>
+	(research ri-heresy)
+)
+
+(defrule
+	(can-research ri-atonement)
+=>
+	(research ri-atonement)
+)
+
+(defrule
+	(can-research ri-sanctity)
+=>
+	(research ri-sanctity)
+)
+(defrule
+	(can-research ri-fervor)
+=>
+	(research ri-fervor)
+)
+
+(defrule
+	(can-research ri-redemption)
+=>
+	(research ri-redemption)
+)
+
+(defrule
+	(can-research ri-faith)
+=>
+	(research ri-faith)
+)
+
+(defrule
+	(can-research ri-illumination)
+=>
+	(research ri-illumination)
+)
+
+(defrule
+	(can-research ri-theocracy)
+=>
+	(research ri-theocracy)
+)
+
+; ============================
+; UNIVERSITY RESEARCH
+; ============================
+
+(defrule
+	(can-research ri-chemistry)
+=>
+	(research ri-chemistry)
+)
+
+(defrule
+	(can-research ri-heated-shot)
+=>
+	(research ri-heated-shot)
+)
+
+(defrule
+	(can-research ri-murder-holes)
+=>
+	(research ri-murder-holes)
+)
+
+(defrule
+	(can-research ri-siege-engineers)
+=>
+	(research ri-siege-engineers)
+)
