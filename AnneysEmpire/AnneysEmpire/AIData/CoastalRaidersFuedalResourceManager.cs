@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuronDotNet.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -119,6 +120,15 @@ namespace AnneysEmpire
 				return _gameNumber;
 			}
 		}
+
+        /// <summary>
+        /// Gets the training set for this particular instance.
+        /// </summary>
+        /// <returns></returns>
+        public TrainingSample GenerateAnnSample()
+        {
+            return new TrainingSample(GetInputParams, GetOutputParams);
+        }
 
 		/// <summary>
 		/// Constructor for the ai training set.
