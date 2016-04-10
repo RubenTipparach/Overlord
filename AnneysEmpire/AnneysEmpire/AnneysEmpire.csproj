@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="AIData\CoastalRaidersAI.cs" />
     <Compile Include="AIData\CoastalRaidersFuedalResourceManager.cs" />
+    <Compile Include="AILearningEngine.cs" />
     <Compile Include="Learning\AiTrainingModule.cs" />
     <Compile Include="Learning\SupervisedLearningSetCsv.cs" />
     <Compile Include="Learning\SupervisedLearningSetDao.cs" />

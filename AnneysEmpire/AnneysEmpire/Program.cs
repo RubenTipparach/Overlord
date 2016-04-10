@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 
 namespace AnneysEmpire
 {
-	
-
 	/// <summary>
 	/// This program is designed to take in input from spreadsheet or
 	/// database system, and generate AI code for Age of Empires 2: Age of Kings.
@@ -32,7 +30,7 @@ namespace AnneysEmpire
 		/// <remarks>
 		/// https://github.com/nlog/nlog/wiki/Tutorial
 		/// </remarks>
-		public Logger Logger
+		public static Logger Logger
 		{
 			get
 			{
