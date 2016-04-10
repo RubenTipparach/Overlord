@@ -43,18 +43,44 @@ namespace AnneysEmpire.Learning
 		private List<CoastalRaidersFuedalResourceManager> _rawMgxStats;
 
         /// <summary>
-        /// 
+        /// What the current state of the running statistics are.
         /// </summary>
-		private CoastalRaidersFuedalResourceManager _currentStats;
+        private CoastalRaidersFuedalResourceManager _currentStats;
+
+        /// <summary>
+        /// Use ghost docs.
+        /// </summary>
+        public CoastalRaidersFuedalResourceManager CurrentStats
+        {
+            get { return _currentStats; }
+            set { _currentStats = value; }
+        }
 
         /// <summary>
         /// The brains of the operation, the glorious neural network that we will be using here.
         /// </summary>
         private Network _nueralNetwork;
 
+        /// <summary>
+        /// Number of cycles for the initial training set to start out on.
+        /// </summary>
         private int _numberOfInitialCycles;
 
+        /// <summary>
+        /// Number of training sets to re-run each time a new game is added to the pattern.
+        /// </summary>
         private int _numberOfContinuousCycles;
+
+        /// <summary>
+        /// This just keeps appending values to an unbound list.
+        /// </summary>
+        private LinkedList<double> _errorList;
+
+        /// <summary>
+        /// Each time the network learns some new stuff. Its brain is refreshed with a few more
+        /// training loops.
+        /// </summary>
+        private int _numberOfNeuronRefreshes;
 
         /// <summary>
         /// This constructor creates a default network to work with.
@@ -66,14 +92,37 @@ namespace AnneysEmpire.Learning
             _aoe2Directory = aoe2Directory;
             _aiScript = aiScript;
 
-            _rawMgxStats = StreamUtilities.GetAiDataSet();
-
             _numberOfInitialCycles = 100000;
             _numberOfContinuousCycles = 10000;
+            _numberOfNeuronRefreshes = 0;
+
+            // Keep track of random number of neurons here.
+            int numberOfInputNeurons = 10;
+            int numberOfHiddenNeurons = 10;
+            int numberOfOutputNeurons = 8;
+
+            double learningRate = 0.25;
+            _errorList = new LinkedList<double>();
+
+            LinearLayer inputLayer = new LinearLayer(numberOfInputNeurons);
+            SigmoidLayer hiddenLayer = new SigmoidLayer(numberOfHiddenNeurons);
+            SigmoidLayer outputLayer = new SigmoidLayer(numberOfOutputNeurons);
+
+            // Wow, how hidden is really hidden. So that I think these connectors do is
+            // insert themselves as part of the various layers. This really hides the hidden
+            // layer from the network, as only the connectors then modify the hidden layer.
+            // In other words "trained".
+            var conn1 = new BackpropagationConnector(inputLayer, hiddenLayer);
+            var conn2 = new BackpropagationConnector(hiddenLayer, outputLayer);
+
+            _nueralNetwork = new BackpropagationNetwork(inputLayer, outputLayer);
+            _nueralNetwork.SetLearningRate(learningRate);
+            _nueralNetwork.EndEpochEvent += BackgroundTasks; // hehe call back methods.
 
             // If this module is being instantiated for the first time, create a comprehensive
             // knowledge base/ network so it can continue where it last left off. Tweak the
             // query to filter outliers.
+            _rawMgxStats = StreamUtilities.GetAiDataSet();
             _nueralNetwork.Learn(CompileTrainingSet(), _numberOfInitialCycles);
         }
 
@@ -89,6 +138,7 @@ namespace AnneysEmpire.Learning
 			_aiScript = aiScript;
 
 			_rawMgxStats = new List<CoastalRaidersFuedalResourceManager>();
+            throw new NotImplementedException("I'm not done with this yet!");
 		}
 
         /// <summary>
@@ -98,6 +148,8 @@ namespace AnneysEmpire.Learning
 		{
             _rawMgxStats = StreamUtilities.GetAiDataSet();
             _nueralNetwork.Learn(CompileTrainingSet(), _numberOfContinuousCycles);
+
+            _numberOfContinuousCycles++;
 		}
 
 
@@ -116,5 +168,10 @@ namespace AnneysEmpire.Learning
             return tset;
         }
 
+        private void BackgroundTasks(object networkInput, TrainingEpochEventArgs args)
+        {
+            _errorList.AddLast(((BackpropagationNetwork)_nueralNetwork).MeanSquaredError);
+            // ugh whatever else is supposed to go here.
+        }
 	}
 }
