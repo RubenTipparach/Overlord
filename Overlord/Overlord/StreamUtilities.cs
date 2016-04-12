@@ -256,6 +256,11 @@ namespace Overlord
 			}
 		}
 
+		/// <summary>
+		/// Use this method to apply changes to the database or trigger stored procedure events.
+		/// </summary>
+		/// <param name="buildSql"></param>
+		/// <param name="cmdString"></param>
 		private static void ExecuteSql(Action<MySqlCommand> buildSql, string cmdString)
 		{
 			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);

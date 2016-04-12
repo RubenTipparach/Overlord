@@ -49,11 +49,11 @@ namespace Overlord
 		/// <param name="args">The arguments.</param>
 		public static void Main(string[] args)
 		{
-			_logger.Info("Started executable.");
-			
 			// This is how I like my consoles.
 			Console.BackgroundColor = ConsoleColor.DarkBlue;
 			Console.Clear();
+
+			_logger.Info("Started executable.");
 
 			// Time to pump this mofo with some shit.
 			AILearningEngine engine = 
