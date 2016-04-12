@@ -187,7 +187,7 @@ namespace Overlord
 				Convert.ToInt32(_sn_stone_gatherer_percentage_fa * 100),
 				Convert.ToInt32(_sn_percent_civilian_builders_fa * 100));
 
-			return BuildAIScriptParts(modifiablePart, filePath + "\\" + AiName + _clonePrefix + ".per");
+			return BuildAIScriptParts(modifiablePart, filePath + AiName + _clonePrefix + ".per");
 		}
 
 		/// <summary>
@@ -199,7 +199,7 @@ namespace Overlord
 		public bool ResetDefauleAiFile(string filePath)
 		{
 			string modifiablePart = string.Format(AI_Mutable_Code, 47, 41, 12, 5, 10);
-			return BuildAIScriptParts(modifiablePart, filePath + "\\" + AiName + _clonePrefix + ".per");
+			return BuildAIScriptParts(modifiablePart, filePath + AiName + _clonePrefix + ".per");
 		}
 
 		/// <summary>

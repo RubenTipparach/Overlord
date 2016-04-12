@@ -14,7 +14,7 @@ namespace Overlord.Learning
 	///  I'm upgrading this to a mysql database to streamline this process.
 	/// </summary>
 	public class SupervisedLearningSetCsv
-    {
+	{
 		/// <summary>
 		/// Created a bullshit method to train bullshit results.
 		/// </summary>

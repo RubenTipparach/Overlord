@@ -70,10 +70,12 @@ namespace Overlord
         /// </summary>
         public AILearningEngine(string scriptDir, string scriptName)
         {
+			_logger = Program.Logger;
+			_logger.Info("Initializing Learning engine.");
+
             _isRunning = true;
             _networkProcessed = false;
             _currentGameSate = GameState.GameNotStarted;
-            _logger = Program.Logger;
 
             // TODO: try other combinations of networks and neurons later.
             _trainingModule = new AITrainingModule(scriptDir, scriptName);
@@ -84,6 +86,7 @@ namespace Overlord
         /// </summary>
         public void Run()
         {
+			_logger.Info("Beginning main thread.");
             Thread.CurrentThread.Name = "Main";
             Task task = Task.Factory.StartNew(() => CheckGameState());
             
@@ -133,6 +136,7 @@ namespace Overlord
 					
 					if(newGame != null)
 					{
+						_logger.Info("New game found, loading data.");
 						// update game flag to processed after processing with the current game.
 						StreamUtilities.UpdateGame(newGame);
 						_currentGameSate = GameState.GameEnd;
