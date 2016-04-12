@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlord", "AnneysEmpire\Overlord.csproj", "{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\NeuronDotNet\Core\Core.csproj", "{D5B56684-0C33-4195-B3D6-D1576B739E42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlord", "Overlord.csproj", "{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,24 +15,18 @@ Global
 		{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D5B56684-0C33-4195-B3D6-D1576B739E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5B56684-0C33-4195-B3D6-D1576B739E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5B56684-0C33-4195-B3D6-D1576B739E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5B56684-0C33-4195-B3D6-D1576B739E42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 1
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
-		SccProjectUniqueName0 = ..\\NeuronDotNet\\Core\\Core.csproj
-		SccProjectName0 = ../NeuronDotNet/Core
-		SccLocalPath0 = ..\\NeuronDotNet\\Core
-		SccLocalPath1 = .
-		SccProjectUniqueName2 = AnneysEmpire\\Overlord.csproj
-		SccProjectName2 = AnneysEmpire
-		SccLocalPath2 = AnneysEmpire
+		SccProjectUniqueName0 = Overlord.csproj
+		SccProjectName0 = .
+		SccAuxPath0 = https://tfs.codeplex.com/tfs/tfs40
+		SccLocalPath0 = .
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 EndGlobal

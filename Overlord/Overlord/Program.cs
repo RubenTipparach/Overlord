@@ -1,4 +1,4 @@
-﻿using AnneysEmpire.Learning;
+﻿using Overlord.Learning;
 using Microsoft.Xna.Framework;
 using NLog;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire
+namespace Overlord
 {
 	/// <summary>
 	/// This program is designed to take in input from spreadsheet or

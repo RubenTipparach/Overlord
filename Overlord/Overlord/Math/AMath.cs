@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire
+namespace Overlord
 {
 	/// <summary>
 	/// Math library for Artificial Nueral Network.

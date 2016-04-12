@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire
+namespace Overlord
 {
 	/// <summary>
 	/// A vector of N size class. To be used for storing arrays of data and doing math operations with them.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire.Learning
+namespace Overlord.Learning
 {
     /// <summary>
     /// How do I even?

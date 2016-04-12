@@ -1,4 +1,4 @@
-﻿using AnneysEmpire.Learning;
+﻿using Overlord.Learning;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AnneysEmpire.Models;
+using Overlord.Models;
 
-namespace AnneysEmpire
+namespace Overlord
 {
     /// <summary>
     /// The purpose of this method is to poll the game's recorded save files,

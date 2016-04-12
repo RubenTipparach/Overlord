@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire.Learning
+namespace Overlord.Learning
 {
 	/// <summary>
 	/// This training module serves as an automated program to collect, analyze data,

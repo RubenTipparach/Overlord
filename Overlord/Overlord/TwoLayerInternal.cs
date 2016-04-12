@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire
+namespace Overlord
 {
 	/// <summary>
 	/// Same as the standard Two layer test neural network,
