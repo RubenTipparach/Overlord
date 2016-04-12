@@ -82,6 +82,7 @@
     <Compile Include="Learning\SupervisedLearningSetCsv.cs" />
     <Compile Include="Learning\SupervisedLearningSetDao.cs" />
     <Compile Include="Learning\UnsupervisedLearningSet.cs" />
+    <Compile Include="Models\GameData.cs" />
     <Compile Include="StreamUtilities.cs" />
     <Compile Include="TestingNdn.cs" />
     <Compile Include="Math\AMath.cs" />

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnneysEmpire.Models;
 
 namespace AnneysEmpire
 {
@@ -83,12 +84,13 @@ namespace AnneysEmpire
 				//MySqlConnection conn = new MySqlConnection(connectionString);
                 conn.Open();
 
-				string cmdString = "SELECT * FROM ai_definition";
+				string cmdString = "SELECT AIIndex, `Name`, Author FROM ai_definition;";
 
 				MySqlCommand cmd = new MySqlCommand(cmdString, conn);
 				
 				cmd.Prepare();
 				MySqlDataReader msdr = cmd.ExecuteReader();
+
 				while(msdr.Read())
 				{
 					Console.Write(Convert.ToString("AIIndex: " + msdr["AIIndex"]) + " ");
@@ -118,29 +120,21 @@ namespace AnneysEmpire
 		/// <returns>Good shit.</returns>
 		public static List<CoastalRaidersFuedalResourceManager> GetAiDataSet()
 		{
-
-			MySqlConnection conn = new MySqlConnection(ConnectionString);
 			var dataRows = new List<CoastalRaidersFuedalResourceManager>();
 
-			try
+			string cmdString = @"
+				SELECT  AD1.Name as player1, AD2.Name as player2,  ANNF.* 
+				FROM aoenn.ai_neural_network_feed ANNF
+					INNER JOIN ai_definition AD1 ON ANNF.p1Index = AD1.AIIndex
+					INNER JOIN ai_definition AD2 ON ANNF.p2Index = AD2.AIIndex;";
+
+			// Delegates allow me to take laziness to a whole new level.
+			ReadSql((MySqlDataReader msdr) =>
 			{
-				//MySqlConnection conn = new MySqlConnection(connectionString);
-				conn.Open();
-
-				string cmdString = @"
-					SELECT  AD1.Name as player1, AD2.Name as player2,  ANNF.* 
-					FROM aoenn.ai_neural_network_feed ANNF
-						inner join ai_definition AD1 on ANNF.p1Index = AD1.AIIndex
-						inner join ai_definition AD2 on ANNF.p2Index = AD2.AIIndex; ";
-
-				MySqlCommand cmd = new MySqlCommand(cmdString, conn);
-
-				cmd.Prepare();
-				MySqlDataReader msdr = cmd.ExecuteReader();
 				// Gets all that good data.
 				while (msdr.Read())
 				{
-					 var player1 = new CoastalRaidersFuedalResourceManager(
+					var player1 = new CoastalRaidersFuedalResourceManager(
 									Convert.ToString(msdr["player1"]),
 									Convert.ToInt32(msdr["GameId"]),
 
@@ -173,6 +167,80 @@ namespace AnneysEmpire
 					dataRows.Add(player1);
 					dataRows.Add(player2);
 				}
+			}, cmdString);
+
+			return dataRows;
+        }
+
+		/// <summary>
+		/// Retrieves the latest game information only if it is an unprocessed
+		/// record.
+		/// </summary>
+		/// <returns></returns>
+		public static GameData GetLatestGame()
+		{
+			string sqlCmd = @"
+				SELECT GameId, IsReady, DateGamePlayed_CDT
+				FROM ai_game_table
+				WHERE IsReady = 0
+				ORDER BY GameId DESC LIMIT 1;";
+
+			GameData defaultDat = null;
+
+			ReadSql((MySqlDataReader msdr) =>
+				{
+					if(msdr.Read())
+					{
+						defaultDat = new GameData(
+							Convert.ToInt32(msdr["GameId"]),
+							Convert.ToBoolean(msdr["IsReady"]),
+							Convert.ToDateTime(msdr["DateGamePlayed_CDT"]));
+					}
+				}, sqlCmd);
+
+			return defaultDat;
+		}
+
+		public static void UpdateGame(GameData gameUpdated)
+		{
+			string sqlCmd = @"
+				SELECT GameId, IsReady, DateGamePlayed_CDT
+				FROM ai_game_table
+				WHERE IsReady = 0
+				ORDER BY GameId DESC LIMIT 1;";
+
+
+
+			ReadSql((MySqlDataReader msdr) =>
+			{
+				
+			}, sqlCmd);
+
+
+		}
+
+		/// <summary>
+		/// This method allows me to make more database connections.
+		/// Maybe I should keep one open in another method?
+		/// </summary>
+		/// <param name="t"></param>
+		/// <param name="cmdString"></param>
+		private static void ReadSql(Action<MySqlDataReader> t, string cmdString)
+		{
+			MySqlConnection conn = new MySqlConnection(ConnectionString);
+
+			try
+			{
+				conn.Open();
+
+				MySqlCommand cmd = new MySqlCommand(cmdString, conn);
+
+				cmd.Prepare();
+
+				MySqlDataReader msdr = cmd.ExecuteReader();
+
+				// Gets all that good data.
+				t(msdr);
 			}
 			catch (MySqlException mse)
 			{
@@ -185,11 +253,39 @@ namespace AnneysEmpire
 					conn.Close();
 				}
 			}
+		}
 
-			return dataRows;
-        }
+		private static void ExecuteSql(string cmdString, MySqlParameterCollection sqlParams)
+		{
+			MySqlConnection conn = new MySqlConnection(ConnectionString);
 
+			try
+			{
+				conn.Open();
+				MySqlCommand cmd = new MySqlCommand(cmdString, conn);
+				
+				foreach ( var sqlParam in sqlParams)
+				{
+					cmd.Parameters.Add(sqlParam);
+				}
+
+				cmd.Prepare();
+				cmd.ExecuteReader();
+			}
+			catch (MySqlException mse)
+			{
+				throw mse;
+			}
+			finally
+			{
+				if (conn != null)
+				{
+					conn.Close();
+				}
+			}
+		}
 	
+
 
 		/// <summary>
 		/// Determines whether [is file locked] [the specified file].
