@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Overlord.Models;
+using System.Configuration;
 
 namespace Overlord
 {
     public static class StreamUtilities
     {
-		private static string ConnectionString = "Server=localhost; Port=3306; Database=aoenn; Uid=ruben; Pwd=ruben;";
 
 		/// <summary>
 		/// Only supports singular array at the moment, dumping complex data table is on my todo list.
@@ -78,7 +78,7 @@ namespace Overlord
 			String s = "";
 			//string connectionString = "server=localhost:3306;userid=ruben;password=ruben;database=aoenn";
 	
-			MySqlConnection conn = new MySqlConnection(ConnectionString);
+			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 			try
 			{
 				//MySqlConnection conn = new MySqlConnection(connectionString);
@@ -201,22 +201,23 @@ namespace Overlord
 			return defaultDat;
 		}
 
+		/// <summary>
+		/// Updates the game. This method tells us that the game's process id has been consumed
+		/// and that the AI is adding this information to its knowledgebase.
+		/// </summary>
+		/// <param name="gameUpdated">The game updated.</param>
 		public static void UpdateGame(GameData gameUpdated)
 		{
 			string sqlCmd = @"
-				SELECT GameId, IsReady, DateGamePlayed_CDT
-				FROM ai_game_table
-				WHERE IsReady = 0
-				ORDER BY GameId DESC LIMIT 1;";
+				UPDATE ai_game_table 
+				SET IsReady = 1
+				WHERE GameId = @CurrentGame;";
 
-
-
-			ReadSql((MySqlDataReader msdr) =>
+			ExecuteSql((MySqlCommand cmd) =>
 			{
-				
-			}, sqlCmd);
-
-
+				var msqlPc = cmd.Parameters;
+                msqlPc.Add(new MySqlParameter("@CurrentGame", gameUpdated.GameId));
+            }, sqlCmd);
 		}
 
 		/// <summary>
@@ -225,9 +226,9 @@ namespace Overlord
 		/// </summary>
 		/// <param name="t"></param>
 		/// <param name="cmdString"></param>
-		private static void ReadSql(Action<MySqlDataReader> t, string cmdString)
+		private static void ReadSql(Action<MySqlDataReader> buildDataSet, string cmdString)
 		{
-			MySqlConnection conn = new MySqlConnection(ConnectionString);
+			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
 			try
 			{
@@ -240,7 +241,7 @@ namespace Overlord
 				MySqlDataReader msdr = cmd.ExecuteReader();
 
 				// Gets all that good data.
-				t(msdr);
+				buildDataSet(msdr);
 			}
 			catch (MySqlException mse)
 			{
@@ -255,19 +256,15 @@ namespace Overlord
 			}
 		}
 
-		private static void ExecuteSql(string cmdString, MySqlParameterCollection sqlParams)
+		private static void ExecuteSql(Action<MySqlCommand> buildSql, string cmdString)
 		{
-			MySqlConnection conn = new MySqlConnection(ConnectionString);
+			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
 			try
 			{
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand(cmdString, conn);
-				
-				foreach ( var sqlParam in sqlParams)
-				{
-					cmd.Parameters.Add(sqlParam);
-				}
+				buildSql(cmd);
 
 				cmd.Prepare();
 				cmd.ExecuteReader();

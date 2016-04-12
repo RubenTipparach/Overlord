@@ -66,6 +66,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -78,7 +79,8 @@
     <Compile Include="AIData\CoastalRaidersAI.cs" />
     <Compile Include="AIData\CoastalRaidersFuedalResourceManager.cs" />
     <Compile Include="AILearningEngine.cs" />
-    <Compile Include="Learning\AiTrainingModule.cs" />
+    <Compile Include="Configurations.cs" />
+    <Compile Include="Learning\AITrainingModule.cs" />
     <Compile Include="Learning\SupervisedLearningSetCsv.cs" />
     <Compile Include="Learning\SupervisedLearningSetDao.cs" />
     <Compile Include="Learning\UnsupervisedLearningSet.cs" />
