@@ -1,25 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnneysEmpire", "AnneysEmpire\AnneysEmpire.csproj", "{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlord", "AnneysEmpire\Overlord.csproj", "{0D929F32-A29C-40C3-8FA3-A8FD862D5DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\NeuronDotNet\Core\Core.csproj", "{D5B56684-0C33-4195-B3D6-D1576B739E42}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = AnneysEmpire\\AnneysEmpire.csproj
-		SccProjectName1 = AnneysEmpire
-		SccLocalPath1 = AnneysEmpire
-		SccProjectUniqueName2 = ..\\NeuronDotNet\\Core\\Core.csproj
-		SccProjectName2 = ../NeuronDotNet/Core
-		SccLocalPath2 = ..\\NeuronDotNet\\Core
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -36,5 +24,17 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs40
+		SccProjectUniqueName0 = ..\\NeuronDotNet\\Core\\Core.csproj
+		SccProjectName0 = ../NeuronDotNet/Core
+		SccLocalPath0 = ..\\NeuronDotNet\\Core
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = AnneysEmpire\\Overlord.csproj
+		SccProjectName2 = AnneysEmpire
+		SccLocalPath2 = AnneysEmpire
 	EndGlobalSection
 EndGlobal

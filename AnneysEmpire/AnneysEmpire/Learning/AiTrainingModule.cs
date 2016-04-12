@@ -119,6 +119,8 @@ namespace AnneysEmpire.Learning
             _nueralNetwork.SetLearningRate(learningRate);
             _nueralNetwork.EndEpochEvent += BackgroundTasks; // hehe call back methods.
 
+			// Needs to make initial configuration of AI.
+
             // If this module is being instantiated for the first time, create a comprehensive
             // knowledge base/ network so it can continue where it last left off. Tweak the
             // query to filter outliers.
