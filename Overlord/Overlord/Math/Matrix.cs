@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnneysEmpire
+namespace Overlord
 {
 	/// <summary>
 	/// The Matrix class used for creating arbitrary NxM matrices, equipped with fancy math operations.
