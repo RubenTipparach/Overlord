@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AnneysEmpire.Models;
 
 namespace AnneysEmpire
 {
@@ -31,9 +32,16 @@ namespace AnneysEmpire
         private bool _networkProcessed;
 
         /// <summary>
-        /// 
+        /// This tells us what state the entire game is in.
         /// </summary>
         private GameState _currentGameSate;
+
+		/// <summary>
+		/// This variable tells us what the most recent game was played.
+		/// We'll update the is processed flag after the program regenerates itself.
+		/// The newest and freshest data should have a record of this GameData row.
+		/// </summary>
+		private GameData _recentGamePlayed;
 
         /// <summary>
         /// 
@@ -99,8 +107,13 @@ namespace AnneysEmpire
         }
 
         /// <summary>
-        /// 
+        /// This method will either learn the game, or poll the database
+		/// to check if an update to the Game table was made.
         /// </summary>
+		/// <remarks>
+		/// Games shall be entered upon completion of
+		/// entering the data of the enconomics score.
+		/// </remarks>
         private void Learn()
         {
             // holds the network that runs the show.
@@ -111,6 +124,20 @@ namespace AnneysEmpire
                 _trainingModule.PushNewTrainingSet();
                 _networkProcessed = false;
             }
+			else
+			{
+				while(_isRunning)
+				{
+					GameData newGame = StreamUtilities.GetLatestGame();
+					
+					if(newGame != null)
+					{
+						// update game flag to processed after processing with the current game.
+					}
+
+					Thread.Sleep(500);
+				}
+			}
         }
 
         public enum GameState

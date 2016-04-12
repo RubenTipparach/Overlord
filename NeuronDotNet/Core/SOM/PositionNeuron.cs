@@ -171,6 +171,7 @@ namespace NeuronDotNet.Core.SOM
                 {
                     sourceSynapses[i].Propagate();
                 }
+
                 value = Math.Sqrt(value);
             }
         }
