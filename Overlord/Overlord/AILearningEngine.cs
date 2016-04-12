@@ -46,7 +46,7 @@ namespace Overlord
         /// <summary>
         /// 
         /// </summary>
-        private AiTrainingModule _trainingModule;
+        private AITrainingModule _trainingModule;
 
         /// <summary>
         /// Referenced instance of the main static logger. This is basically just some
@@ -55,7 +55,7 @@ namespace Overlord
         private Logger _logger;
 
         /// <summary>
-        /// 
+        /// Exposes the engine's running parameter.
         /// </summary>
         public bool IsRunning
         {
@@ -76,7 +76,7 @@ namespace Overlord
             _logger = Program.Logger;
 
             // TODO: try other combinations of networks and neurons later.
-            _trainingModule = new AiTrainingModule(scriptDir, scriptName);
+            _trainingModule = new AITrainingModule(scriptDir, scriptName);
         }
 
         /// <summary>
@@ -121,6 +121,7 @@ namespace Overlord
                 && _isRunning
                 && !_networkProcessed)
             {
+				_logger.Info("Game generated.");
                 _trainingModule.PushNewTrainingSet();
                 _networkProcessed = false;
             }
@@ -133,6 +134,8 @@ namespace Overlord
 					if(newGame != null)
 					{
 						// update game flag to processed after processing with the current game.
+						StreamUtilities.UpdateGame(newGame);
+						_currentGameSate = GameState.GameEnd;
 					}
 
 					Thread.Sleep(500);
@@ -140,7 +143,11 @@ namespace Overlord
 			}
         }
 
-        public enum GameState
+		/// <summary>
+		/// Used for reporting game state.
+		/// I hate relying on booleans.
+		/// </summary>
+		public enum GameState
         {
             GameNotStarted,
             GameRunning,

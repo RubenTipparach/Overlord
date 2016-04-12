@@ -55,6 +55,17 @@ namespace Overlord
 			Console.BackgroundColor = ConsoleColor.DarkBlue;
 			Console.Clear();
 
+			// Time to pump this mofo with some shit.
+			AILearningEngine engine = 
+				new AILearningEngine(Configurations.TargetAoe2Path, Configurations.TargetAoe2Script);
+			engine.Run();
+
+			Console.WriteLine("Program ended. Press any key to continue.");
+			Console.ReadKey();
+		}
+
+		static void Dump()
+		{
 			//To do write unit test for my Matrix/Vector library, maybe not since I went with a framework instead.
 
 			//TwoLayer.NeuralNetowrk();
