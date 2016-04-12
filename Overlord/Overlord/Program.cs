@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Overlord
 {
@@ -55,13 +56,26 @@ namespace Overlord
 
 			_logger.Info("Started executable.");
 
-			// Time to pump this mofo with some shit.
-			AILearningEngine engine = 
-				new AILearningEngine(Configurations.TargetAoe2Path, Configurations.TargetAoe2Script);
-			engine.Run();
+            string datasource = Convert.ToString(ConfigurationManager.AppSettings["Datasource"]);
 
-			Console.WriteLine("Program ended. Press any key to continue.");
-			Console.ReadKey();
+			// Time to pump this mofo with some shit.
+            if (datasource == "Database")
+            {
+                _logger.Info("Using learning engine.");
+                AILearningEngine engine = new AILearningEngine(Configurations.TargetAoe2Path, Configurations.TargetAoe2Script);
+                engine.Run();
+            }
+            else if (datasource == "Local")
+            {
+                _logger.Info("Using local debugger.");
+                // Run using local ai parser
+            }
+            else
+            {
+                _logger.Error("Unknow datasource, terminating program!");
+            }
+
+            _logger.Info("Program ended.");
 		}
 
 		static void Dump()
