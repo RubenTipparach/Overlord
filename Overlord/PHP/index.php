@@ -1,4 +1,5 @@
 <script>
+/*
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -10,7 +11,7 @@ function loadDoc() {
   xhttp.send();
 }
 
-/*
+
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -25,7 +26,7 @@ function loadDoc() {
 
 </script>
 
-<body onload="loadDoc()">
+<body>
 <?
 	$conn = new mysqli("localhost:3306", "root", "", "aoenn");
 
@@ -113,8 +114,10 @@ function loadDoc() {
 	while($row = mysqli_fetch_assoc($result))
 	{	
 		print("<tr>");
-			print("<td><input type='number' name='PlayerId".$i."' value='".$row["PlayerId"]."' disabled></td>");
-			print("<td><input type='number' name='GameId".$i."' value='".$row["GameId"]."' disabled></td>");
+			print("<td>".$row["PlayerId"]."</td>");
+			print("<td>".$row["GameId"]."</td>");
+			$_POST['PlayerId'.$i] = $row["PlayerId"];
+			$_POST['GameId'.$i] = $row["GameId"];
 
 			print("<td><input type='number' name='FoodScore".$i."'></td>");
 			print("<td><input type='number' name='GoldScore".$i."'></td>");
@@ -129,33 +132,36 @@ function loadDoc() {
 	print("</form>");
 	print("</table>");
 
-	if (count($_POST) > 0)
+	if (count($_POST) > 4)
 	{
 		// Submit some data
 		for($i = 0; $i < 2; $i++)
 		{
+			$player = $_POST['PlayerId'.$i];
 			// Submit to ai_economy_feudal_output_raw 
-			print("<br>Game ".$_POST['GameId'.$i]." score wast posted! ");
-			print("<br>Food p".$i." score wast posted! " . $_POST['FoodScore'.$i]);
-			print("<br>Gold p".$i." score wast posted! " . $_POST['GoldScore'.$i]);
-			print("<br>Stone p".$i." score wast posted! " . $_POST['StoneScore'.$i]);
-			print("<br>Builder p".$i." score wast posted! " . $_POST['BuildersScore'.$i]);
+			print("<br>Game ".$_POST['GameId'.$i]." score wast posted! For p".$_POST['PlayerId'.$i]);
+			print("<br>Food p".$player." score wast posted! " . $_POST['FoodScore'.$i]);
+			print("<br>Gold p".$player." score wast posted! " . $_POST['GoldScore'.$i]);
+			print("<br>Stone p".$player." score wast posted! " . $_POST['StoneScore'.$i]);
+			print("<br>Builder p".$player." score wast posted! " . $_POST['BuildersScore'.$i]);
 			
 			$updateAiOutputSql = "
 			UPDATE ai_economy_feudal_output_raw
 			SET Food = ".$_POST['FoodScore'.$i]."
-				Wood = ".$_POST['GoldScore'.$i]."
-				Stone = ".$_POST['StoneScore'.$i]."
-				Gold = ".$_POST['BuildersScore'.$i]."
+				AND Wood = ".$_POST['GoldScore'.$i]."
+				AND Stone = ".$_POST['StoneScore'.$i]."
+				AND Gold = ".$_POST['BuildersScore'.$i]."
 			WHERE AiIndex = ".$_POST['PlayerId'.$i]."
-				AND	GameId = ".$_POST['GameId'.$i]."
+				AND	GameId = ".$_POST['GameId'.$i].";
 			";
-			
+			print('<br>'.$updateAiOutputSql);
+
 			// Update ai_game_table via insert new game column to isReady = 0
 			$insertAiGameSql = "
 			INSERT INTO ai_game_table
-			VALUES( ".$_POST['GameId'.$i]. , null, now());
+			VALUES( ".$_POST['GameId'.$i]. ", null, now());
 			";
+			print('<br>'.$insertAiGameSql);
 		}
 	}
 
