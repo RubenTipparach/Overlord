@@ -118,6 +118,8 @@
   <ItemGroup>
     <Content Include="Data\CoastalRaiders_bottom_part.txt" />
     <Content Include="Data\CoastalRaiders_top_part.txt" />
+    <Content Include="Data\Original\G4-Coastal-Raiders.ai" />
+    <Content Include="Data\Original\G4-Coastal-Raiders.per" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
