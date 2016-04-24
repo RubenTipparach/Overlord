@@ -3,16 +3,31 @@ function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
+     document.getElementById("gameEntryForm").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("POST", "SubmitGameData.php", true);
+  xhttp.send();
+}
+
+/*
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
      document.getElementById("demo").innerHTML = xhttp.responseText;
     }
   };
   xhttp.open("POST", "SubmitGameData.php", true);
   xhttp.send();
 }
+*/
+
 </script>
 
+<body onload="loadDoc()">
 <?
-	$conn = new mysqli("localhost:4040", "root", "", "aoenn");
+	$conn = new mysqli("localhost:3306", "root", "", "aoenn");
 
 	// do some selects on the tables
 	print("<br><h3>List of availible AIs in database.</h3>");
@@ -51,8 +66,9 @@ function loadDoc() {
 	}
 
 	print("</table>");
-
+	// Load the script for the games.
 	print("<br><h3>List of games that require data.</h3>");
+
 
 	// then we'll do some more selects to detect incomplete data,
 	$getAITableInputSql = "
@@ -88,36 +104,74 @@ function loadDoc() {
 			<th>StoneScore</th>
 			<th>BuildersScore</th>
 
-			<th></th>
+
 		</tr>");
-	
-	/*
-		<th>p2FoodScore</th>
-		<th>p2GoldScore</th>
-		<th>p2StoneScore</th>
-		<th>p2BuildersScore</th>
-	*/
+
+	print("<form action='index.php' method='post'>");
+	$i = 0;
 
 	while($row = mysqli_fetch_assoc($result))
 	{	
-		print("<form action='SubmitGameData.php' method='post'>");
 		print("<tr>");
-			print("<td>".$row["PlayerId"]."</td>");
-			print("<td>".$row["GameId"]."</td>");
+			print("<td><input type='number' name='PlayerId".$i."' value='".$row["PlayerId"]."' disabled></td>");
+			print("<td><input type='number' name='GameId".$i."' value='".$row["GameId"]."' disabled></td>");
 
-			print("<td><input type='number' name='FoodScore'></td>");
-			print("<td><input type='number' name='GoldScore'></td>");
-			print("<td><input type='number' name='StoneScore'></td>");
-			print("<td><input type='number' name='BuildersScore'></td>");
+			print("<td><input type='number' name='FoodScore".$i."'></td>");
+			print("<td><input type='number' name='GoldScore".$i."'></td>");
+			print("<td><input type='number' name='StoneScore".$i."'></td>");
+			print("<td><input type='number' name='BuildersScore".$i."'></td>");
 
-			print("<td><input type='submit' value='Submit'></td>");
 		print("</tr>");
-		print("</form>");
+		$i++;
 	}
-	
+
+	print("<br><br><input type='submit' value='Submit'>");
+	print("</form>");
 	print("</table>");
 
-	// generate a proper form
+	if (count($_POST) > 0)
+	{
+		// Submit some data
+		for($i = 0; $i < 2; $i++)
+		{
+			// Submit to ai_economy_feudal_output_raw 
+			print("<br>Game ".$_POST['GameId'.$i]." score wast posted! ");
+			print("<br>Food p".$i." score wast posted! " . $_POST['FoodScore'.$i]);
+			print("<br>Gold p".$i." score wast posted! " . $_POST['GoldScore'.$i]);
+			print("<br>Stone p".$i." score wast posted! " . $_POST['StoneScore'.$i]);
+			print("<br>Builder p".$i." score wast posted! " . $_POST['BuildersScore'.$i]);
+			
+			$updateAiOutputSql = "
+			UPDATE ai_economy_feudal_output_raw
+			SET Food = ".$_POST['FoodScore'.$i]."
+				Wood = ".$_POST['GoldScore'.$i]."
+				Stone = ".$_POST['StoneScore'.$i]."
+				Gold = ".$_POST['BuildersScore'.$i]."
+			WHERE AiIndex = ".$_POST['PlayerId'.$i]."
+				AND	GameId = ".$_POST['GameId'.$i]."
+			";
+			
+			// Update ai_game_table via insert new game column to isReady = 0
+			$insertAiGameSql = "
+			INSERT INTO ai_game_table
+			VALUES( ".$_POST['GameId'.$i]. , null, now());
+			";
+		}
+	}
 
 	mysqli_close($conn);
 ?>
+
+<!--<div id='gameEntryForm'></div>-->
+
+<!--
+<form action="InputTableView.php" method="post">
+  Food Score:<br>
+  <input type="text" name="FoodScore" value="Mouse">
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+-->
+
+
+</body>
