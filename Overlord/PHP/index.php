@@ -139,29 +139,38 @@ function loadDoc() {
 		{
 			$player = $_POST['PlayerId'.$i];
 			// Submit to ai_economy_feudal_output_raw 
+			
+			/*
 			print("<br>Game ".$_POST['GameId'.$i]." score wast posted! For p".$_POST['PlayerId'.$i]);
 			print("<br>Food p".$player." score wast posted! " . $_POST['FoodScore'.$i]);
 			print("<br>Gold p".$player." score wast posted! " . $_POST['GoldScore'.$i]);
 			print("<br>Stone p".$player." score wast posted! " . $_POST['StoneScore'.$i]);
 			print("<br>Builder p".$player." score wast posted! " . $_POST['BuildersScore'.$i]);
-			
-			$updateAiOutputSql = "
-			UPDATE ai_economy_feudal_output_raw
-			SET Food = ".$_POST['FoodScore'.$i]."
-				AND Wood = ".$_POST['GoldScore'.$i]."
-				AND Stone = ".$_POST['StoneScore'.$i]."
-				AND Gold = ".$_POST['BuildersScore'.$i]."
-			WHERE AiIndex = ".$_POST['PlayerId'.$i]."
-				AND	GameId = ".$_POST['GameId'.$i].";
-			";
-			print('<br>'.$updateAiOutputSql);
+			*/
 
+			$updateAiOutputSql = "
+			INSERT INTO ai_economy_feudal_output_raw
+			(AiIndex, Food, Wood, Stone, Gold, GameId)
+			VALUES(
+				".$_POST['PlayerId'.$i].",
+				".$_POST['FoodScore'.$i].",
+				".$_POST['GoldScore'.$i].",
+				".$_POST['StoneScore'.$i].",
+				".$_POST['BuildersScore'.$i].",
+				".$_POST['GameId'.$i].");
+			";
+
+			print('<br>'.$updateAiOutputSql);
+			$conn->query($updateAiOutputSql);
+			
 			// Update ai_game_table via insert new game column to isReady = 0
 			$insertAiGameSql = "
 			INSERT INTO ai_game_table
-			VALUES( ".$_POST['GameId'.$i]. ", null, now());
+			VALUES( ".$_POST['GameId'.$i]. ", 0, now());
 			";
+
 			print('<br>'.$insertAiGameSql);
+			$conn->query($insertAiGameSql);
 		}
 	}
 
