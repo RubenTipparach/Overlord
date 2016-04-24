@@ -262,6 +262,27 @@ namespace Overlord
 
 			return result;
 		}
+
+        /// <summary>
+        /// Returns the magnitude of this vector.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public double Length
+        {
+            get
+            {
+                double result = 0;
+
+                foreach(double d in _vectorArray)
+                {
+                    result += d * d;
+                }
+
+                return Math.Sqrt(result);
+            }
+        }
 	}
 
 	/// <summary>

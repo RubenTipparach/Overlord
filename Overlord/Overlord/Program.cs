@@ -1,5 +1,4 @@
 ﻿using Overlord.Learning;
-using Microsoft.Xna.Framework;
 using NLog;
 using System;
 using System.Collections.Generic;
