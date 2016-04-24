@@ -105,10 +105,13 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="PHP\index.php" />
+    <None Include="PHP\InputTableView.php" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="PHP\SubmitGameData.php" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NeuronDotNet\Core\Core.csproj">
