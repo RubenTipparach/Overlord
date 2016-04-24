@@ -85,6 +85,8 @@ namespace Overlord.Learning
 
 		private Logger _logger;
 
+		private double _percent = 0;
+
 		/// <summary>
 		/// This constructor creates a default network to work with.
 		/// </summary>
@@ -133,17 +135,17 @@ namespace Overlord.Learning
 			// query to filter outliers.
 			_rawMgxStats = StreamUtilities.GetAiDataSet();
 			
-			double percent = 0;
+			
 
-			_nueralNetwork.EndEpochEvent+= 
+			_nueralNetwork.EndEpochEvent += 
 				(object networkInput, TrainingEpochEventArgs args) =>
 				{
-					if (percent % (_numberOfInitialCycles/10) == 0 && percent > 0)
+					if (_percent % (_numberOfInitialCycles/10) == 0 && _percent > 0)
 					{
-						_logger.Info(string.Format("Precent completed {0}%", percent/(_numberOfInitialCycles/100)));
+						_logger.Info(string.Format("Precent completed {0}%", _percent / (_numberOfInitialCycles/100)));
 					}
 
-					percent++;
+					_percent++;
 				};
 
 			_nueralNetwork.Learn(CompileTrainingSet(), _numberOfInitialCycles);
@@ -171,10 +173,14 @@ namespace Overlord.Learning
 		/// </summary>
 		public void PushNewTrainingSet()
 		{
+			_numberOfInitialCycles = _numberOfContinuousCycles;
+            _percent = 0;
 			_rawMgxStats = StreamUtilities.GetAiDataSet();
 			_nueralNetwork.Learn(CompileTrainingSet(), _numberOfContinuousCycles);
 
 			_numberOfContinuousCycles++;
+
+			_logger.Warn("Finished additional training cycle.");
 		}
 
 

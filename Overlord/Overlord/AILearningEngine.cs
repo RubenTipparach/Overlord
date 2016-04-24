@@ -105,7 +105,8 @@ namespace Overlord
             while(_isRunning)
             {
                 Learn();
-            }
+				Thread.Sleep(500);
+			}
 
         }
 
@@ -121,28 +122,25 @@ namespace Overlord
         {
             // holds the network that runs the show.
             if (_currentGameSate == GameState.GameEnd
-                && _isRunning
                 && !_networkProcessed)
             {
 				_logger.Info("Game generated.");
                 _trainingModule.PushNewTrainingSet();
-                _networkProcessed = false;
+                _networkProcessed = true;
+				_currentGameSate = GameState.GameNotStarted;
             }
 			else
 			{
-				while(_isRunning)
-				{
-					GameData newGame = StreamUtilities.GetLatestGame();
-					
-					if(newGame != null)
-					{
-						_logger.Info("New game found, loading data.");
-						// update game flag to processed after processing with the current game.
-						StreamUtilities.UpdateGame(newGame);
-						_currentGameSate = GameState.GameEnd;
-					}
 
-					Thread.Sleep(500);
+				GameData newGame = StreamUtilities.GetLatestGame();
+					
+				if(newGame != null)
+				{
+					_logger.Info("New game found, loading data.");
+					// update game flag to processed after processing with the current game.
+					StreamUtilities.UpdateGame(newGame);
+					_currentGameSate = GameState.GameEnd;
+					_networkProcessed = false;
 				}
 			}
         }
