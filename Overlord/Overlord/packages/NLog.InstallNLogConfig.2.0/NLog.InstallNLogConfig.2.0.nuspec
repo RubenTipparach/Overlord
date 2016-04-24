@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NLog.InstallNLogConfig</id>
+    <version>2.0</version>
+    <authors>NLog</authors>
+    <owners>NLog</owners>
+    <licenseUrl>https://github.com/NLog/NLog.InstallNLogConfig/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/NLog/NLog.InstallNLogConfig</projectUrl>
+    <iconUrl>http://nlog-project.org/N.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Tool for install NLog configuration</description>
+    <releaseNotes>Build to NLog 4</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>nlog log logging config</tags>
+    <dependencies>
+      <dependency id="NLog" version="4.0.0" />
+    </dependencies>
+  </metadata>
+</package>
