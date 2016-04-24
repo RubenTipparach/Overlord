@@ -1,4 +1,42 @@
-(load "t8-resign")
+; If the game ends before 4:01:00, then the winner is whoever
+;   has not resigned.
+; If the game ends after 4:01:00, then the winner is the team
+;   with the highest combined score.
+
+(defconst aileague-sudden-death-time 14400) ; 4:00:00
+(defconst aileague-end-game-time 14460) ; 4:01:00
+
+(defrule
+	(game-time > aileague-sudden-death-time)
+	(or (and (population <= 2)
+        (players-population any-computer >= 4))
+	(or (and (population <= 4)
+        (players-population any-computer >= 8))
+	(and (population <= 8)
+        (players-population any-computer >= 16))))
+=>
+	(resign)
+)
+(defrule
+	(game-time > aileague-sudden-death-time)
+	(or (and (population <= 16)
+        (players-population any-computer >= 32))
+	(or (and (population <= 32)
+        (players-population any-computer >= 64))
+	(and (population <= 64)
+        (players-population any-computer >= 128))))
+=>
+	(resign)
+)
+(defrule
+	(game-time > 600)
+	(or (game-time > aileague-end-game-time)
+	(or (population < 2)
+	(building-count < 1)))
+=>
+	(resign)
+)
+
 
 ; ============================
 ; AI LEAGUE REQUIRED CODE
