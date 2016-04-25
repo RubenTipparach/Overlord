@@ -16,27 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ai_plotable_data`
+-- Table structure for table `ai_plotset`
 --
 
-DROP TABLE IF EXISTS `ai_plotable_data`;
+DROP TABLE IF EXISTS `ai_plotset`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ai_plotable_data` (
-  `DataId` int(11) NOT NULL,
-  `X` double NOT NULL,
-  `Y` double NOT NULL,
-  `Z` double NOT NULL
+CREATE TABLE `ai_plotset` (
+  `DataId` int(11) NOT NULL AUTO_INCREMENT,
+  `ToleranceLevel` double NOT NULL,
+  `AxisX` int(11) NOT NULL,
+  `AxisY` int(11) NOT NULL,
+  PRIMARY KEY (`DataId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ai_plotable_data`
+-- Dumping data for table `ai_plotset`
 --
 
-LOCK TABLES `ai_plotable_data` WRITE;
-/*!40000 ALTER TABLE `ai_plotable_data` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ai_plotable_data` ENABLE KEYS */;
+LOCK TABLES `ai_plotset` WRITE;
+/*!40000 ALTER TABLE `ai_plotset` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ai_plotset` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -1,6 +1,7 @@
 ﻿using NeuronDotNet.Core;
 using NeuronDotNet.Core.Backpropagation;
 using NLog;
+using Overlord.Search;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,12 +50,21 @@ namespace Overlord.Learning
 		private CoastalRaidersFuedalResourceManager _currentStats;
 
 		/// <summary>
-		/// Use ghost docs.
+		/// Gets or sets the current stats.
 		/// </summary>
+		/// <value>
+		/// The current stats.
+		/// </value>
 		public CoastalRaidersFuedalResourceManager CurrentStats
 		{
-			get { return _currentStats; }
-			set { _currentStats = value; }
+			get
+			{
+				return _currentStats;
+			}
+			set
+			{
+				_currentStats = value;
+			}
 		}
 
 		/// <summary>
@@ -83,9 +93,36 @@ namespace Overlord.Learning
 		/// </summary>
 		private int _numberOfNeuronRefreshes;
 
+		/// <summary>
+		/// The logger instance.
+		/// </summary>
 		private Logger _logger;
 
+		/// <summary>
+		/// The percentage of completion.
+		/// </summary>
 		private double _percent = 0;
+
+		/// <summary>
+		/// This is the hill climbing algorithm instance. It has some builtin functionality that allows it
+		/// to try and find the global optimum. It also has additional capabilities such as generating
+		/// a graph or data set that might be useful for visualizing the prediction output of the neural network.
+		/// </summary>
+		private HillClimbing _climber;
+
+		/// <summary>
+		/// Gets the climber.
+		/// </summary>
+		/// <value>
+		/// The climber.
+		/// </value>
+		public HillClimbing Climber
+		{
+			get
+			{
+				return _climber;
+			}
+		}
 
 		/// <summary>
 		/// This constructor creates a default network to work with.
@@ -134,8 +171,6 @@ namespace Overlord.Learning
 			// knowledge base/ network so it can continue where it last left off. Tweak the
 			// query to filter outliers.
 			_rawMgxStats = StreamUtilities.GetAiDataSet();
-			
-			
 
 			_nueralNetwork.EndEpochEvent += 
 				(object networkInput, TrainingEpochEventArgs args) =>
@@ -148,8 +183,25 @@ namespace Overlord.Learning
 					_percent++;
 				};
 
-			_nueralNetwork.Learn(CompileTrainingSet(), _numberOfInitialCycles);
+			_nueralNetwork.Learn(CompileTrainingSet(_rawMgxStats), _numberOfInitialCycles);
 			_logger.Warn("Finished initial training cycle.");
+
+			// Get the latest dataset so we can generate some kind of graph and push the data set to database.
+			var aiTrainingSet = CompileTrainingSet(StreamUtilities.GetLatestAiEntry().ToList());
+
+			// push data
+			_climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
+			StreamUtilities.SubmitPlotableData(_climber.GenerateTopologyData(0, 1));
+		}
+
+		/// <summary>
+		/// Gets the ideal input data.
+		/// </summary>
+		/// <returns></returns>
+		public double[] GetIdealInputData()
+		{
+			_climber.FindOptimalSolution();
+			return _climber.GetIdealInputData;
 		}
 
 		/// <summary>
@@ -176,7 +228,7 @@ namespace Overlord.Learning
 			_numberOfInitialCycles = _numberOfContinuousCycles;
             _percent = 0;
 			_rawMgxStats = StreamUtilities.GetAiDataSet();
-			_nueralNetwork.Learn(CompileTrainingSet(), _numberOfContinuousCycles);
+			_nueralNetwork.Learn(CompileTrainingSet(_rawMgxStats), _numberOfContinuousCycles);
 
 			_numberOfContinuousCycles++;
 
@@ -187,21 +239,21 @@ namespace Overlord.Learning
 		/// <summary>
 		/// Brings all the ai list together into a training set to do some killer stuff.
 		/// </summary>
-		/// <returns></returns>
-		private TrainingSet CompileTrainingSet()
+		/// <returns>Compilation of a single training set.</returns>
+		private TrainingSet CompileTrainingSet(List<CoastalRaidersFuedalResourceManager> rawMgxStats)
 		{
-			if(_rawMgxStats.Count == 0)
+			if(rawMgxStats.Count == 0)
 			{
 				Program.Logger.Error("There are currently now stats availible in the System to build a database.");
 				Program.Logger.Error("Attemting to generate new entry....");
 				// Generate brand new AI entry in here to test the auto data collection capability.
 			}
 
-			TrainingSet tset = new TrainingSet(_rawMgxStats[0].GetInputParams.Length*2, _rawMgxStats[0].GetOutputParams.Length*2);
-			for (int i = 0; i < _rawMgxStats.Count; i += 2)
+			TrainingSet tset = new TrainingSet(rawMgxStats[0].GetInputParams.Length*2, rawMgxStats[0].GetOutputParams.Length*2);
+			for (int i = 0; i < rawMgxStats.Count; i += 2)
 			{
-				var player1 = _rawMgxStats[i].GenerateAnnSample();
-				var player2 = _rawMgxStats[i + 1].GenerateAnnSample();
+				var player1 = rawMgxStats[i].GenerateAnnSample();
+				var player2 = rawMgxStats[i + 1].GenerateAnnSample();
 
 				// Some bad ass Linq right here.
 				var trainingSample = new TrainingSample(

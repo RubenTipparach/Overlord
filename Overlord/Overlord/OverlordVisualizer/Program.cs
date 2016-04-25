@@ -21,7 +21,10 @@ namespace OverlordVisualizer
         }
     }
 
-    public static class Configurations
+	/// <summary>
+	/// Allows the program to get hard coded settings from the config file.
+	/// </summary>
+	public static class Configurations
     {
         public static readonly string ConnectionString = ConfigurationManager.AppSettings["MySqlConnString"];
     }
