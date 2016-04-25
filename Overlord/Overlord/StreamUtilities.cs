@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Overlord.Models;
 using System.Configuration;
+using System.Data;
 
 namespace Overlord
 {
@@ -220,13 +221,42 @@ namespace Overlord
             }, sqlCmd);
 		}
 
-		/// <summary>
-		/// This method allows me to make more database connections.
-		/// Maybe I should keep one open in another method?
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="cmdString"></param>
-		private static void ReadSql(Action<MySqlDataReader> buildDataSet, string cmdString)
+        public static void SubmitPlotableData(List<VectorN> dataPoints)
+        {
+
+            int maxDataId = 0;
+            string readCmd = "SELECT MAX(DataId) FROM aoenn.ai_plotable_data;";
+            ReadSql((MySqlDataReader msdr) =>
+            {
+                if (msdr.Read())
+                {
+                    maxDataId = Convert.ToInt32(msdr["MaxRow"]);
+                }
+            }, readCmd);
+
+            StringBuilder sqlCmd = new StringBuilder(@"
+				INSERT INTO ai_plotable_data (DataId, X, Y, Z) VALUE ");
+
+            List<string> rows = new List<string>(dataPoints.Count);
+
+            for (int i = 0; i < dataPoints.Count; i++)
+            {
+                rows.Add(string.Format("( {0}, {1}, {2} ,{3} )", maxDataId, dataPoints[i][0], dataPoints[i][1], dataPoints[i][2]));
+            }
+
+            sqlCmd.Append(string.Join(",", rows));
+            sqlCmd.Append(";");
+
+            ExecuteSql((MySqlCommand cmd) => {}, sqlCmd.ToString());
+        }
+
+        /// <summary>
+        /// This method allows me to make more database connections.
+        /// Maybe I should keep one open in another method?
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="cmdString"></param>
+        private static void ReadSql(Action<MySqlDataReader> buildDataSet, string cmdString)
 		{
 			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
@@ -272,7 +302,8 @@ namespace Overlord
 				buildSql(cmd);
 
 				cmd.Prepare();
-				cmd.ExecuteReader();
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
 			}
 			catch (MySqlException mse)
 			{
