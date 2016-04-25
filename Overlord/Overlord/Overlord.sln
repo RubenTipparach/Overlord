@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\..\NeuronDotNet\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverlordService", "..\OverlordService\OverlordService.csproj", "{A9544C65-0298-4A07-B99D-034B2B623E9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverlordVisualizer", "OverlordVisualizer\OverlordVisualizer.csproj", "{766F2598-3847-402F-9875-BE7CA9984D20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A9544C65-0298-4A07-B99D-034B2B623E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9544C65-0298-4A07-B99D-034B2B623E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9544C65-0298-4A07-B99D-034B2B623E9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{766F2598-3847-402F-9875-BE7CA9984D20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{766F2598-3847-402F-9875-BE7CA9984D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{766F2598-3847-402F-9875-BE7CA9984D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{766F2598-3847-402F-9875-BE7CA9984D20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
