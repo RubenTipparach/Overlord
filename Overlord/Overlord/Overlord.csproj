@@ -129,8 +129,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="PHP\recanalyst\index.php.bak" />
-    <None Include="PHP\recanalyst\RecAnalyst.php.bak" />
     <None Include="PHP\recanalyst\recorded game -  09-Jul-2011 22`55`35.mgx" />
     <None Include="PHP\recanalyst\SP Replay v4.6 %402016.04.07 233051.aoe2record" />
     <None Include="PHP\SubmitGameData.php" />
