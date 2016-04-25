@@ -96,6 +96,25 @@
     <Compile Include="Math\VectorN.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PHP\recanalyst\Archive.php" />
+    <Content Include="PHP\recanalyst\ChatMessage.php" />
+    <Content Include="PHP\recanalyst\Civilization.php" />
+    <Content Include="PHP\recanalyst\Config.php" />
+    <Content Include="PHP\recanalyst\GameInfo.php" />
+    <Content Include="PHP\recanalyst\GameSettings.php" />
+    <Content Include="PHP\recanalyst\index.php" />
+    <Content Include="PHP\recanalyst\InitialState.php" />
+    <Content Include="PHP\recanalyst\Map.php" />
+    <Content Include="PHP\recanalyst\MemoryStream.php" />
+    <Content Include="PHP\recanalyst\Player.php" />
+    <Content Include="PHP\recanalyst\RecAnalyst.php" />
+    <Content Include="PHP\recanalyst\RecAnalystConst.php" />
+    <Content Include="PHP\recanalyst\RecAnalystException.php" />
+    <Content Include="PHP\recanalyst\Stream.php" />
+    <Content Include="PHP\recanalyst\Team.php" />
+    <Content Include="PHP\recanalyst\Tribute.php" />
+    <Content Include="PHP\recanalyst\Unit.php" />
+    <Content Include="PHP\recanalyst\VictorySettings.php" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -110,6 +129,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="PHP\recanalyst\index.php.bak" />
+    <None Include="PHP\recanalyst\RecAnalyst.php.bak" />
+    <None Include="PHP\recanalyst\recorded game -  09-Jul-2011 22`55`35.mgx" />
+    <None Include="PHP\recanalyst\SP Replay v4.6 %402016.04.07 233051.aoe2record" />
     <None Include="PHP\SubmitGameData.php" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +159,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist $(TargetDir)Data mkdir $(TargetDir)Data

@@ -55,25 +55,32 @@ namespace Overlord.Search
             _outputData = _nueralNetwork.Run(_inputData);
         }
 
-        /// <summary>
-        /// Finds the optimal solution.
-        /// Algorithm:
-        ///     1. Find the most largest delta  => Xi between player 1  => X[] and player 2 => Y[].
-        ///     2. Adjust that delta and devide that delta to all the other values.
-        ///     3. repeat steps 1 and 2 and until Y is maximized in Y`
-        ///     4. Continue to variable Y1 until Y`...YN` for player 2 is maximized, i.e. sum(Y`...YN`) > sum(X`...XN`)
-        /// </summary>
+		/// <summary>
+		/// Finds the optimal solution.
+		/// Algorithm:
+		///     1. Find the most largest delta  => Xi between player 1  => X[] and player 2 => Y[].
+		///     2. Adjust that delta and devide that delta to all the other values.
+		///     3. repeat steps 1 and 2 and until Y is maximized in Y`
+		///     4. Continue to variable Y1 until Y`...YN` for player 2 is maximized, i.e. sum(Y`...YN`) > sum(X`...XN`)
+		/// </summary>
+		/// <param name="toleranceAmount">
+		/// Defaults to 1/1,000th other wise specifiesthe incremental value of each controled vars.
+		/// </param>
         public void FindOptimalSolution(double toleranceAmount = 0.001)
         {
+			_logger.Warn("Finding optimal solution with Hill Climbing....");
+
             int playerInputLength = _inputData.Length / 2;
             int playerOutputLength = _outputData.Length / 2;
             double[] totalSums = FindSums(playerOutputLength);
             double[] totalDeviations = FindStandardDeviation(playerOutputLength, totalSums);
 
+			int tries = 0;
             while (totalSums[0] > totalSums[1] || totalDeviations[0] > totalDeviations[1])
             {
-                // Compare output delta.
-                int minimumDeltaIndex = 0;
+				tries++;
+				// Compare output delta.
+				int minimumDeltaIndex = 0;
                 double currentDelta = _outputData[minimumDeltaIndex + playerOutputLength] - _outputData[minimumDeltaIndex];
 
                 // Find the least delta.
@@ -126,6 +133,8 @@ namespace Overlord.Search
                 totalSums = FindSums(playerOutputLength);
                 totalDeviations = FindStandardDeviation(playerOutputLength, totalSums);
             }
+
+			_logger.Warn(string.Format("Found a solution in {0} tries.", tries));
         }
 
         
@@ -289,40 +298,47 @@ namespace Overlord.Search
         /// 
         /// The Z is the normalized result? Just experimenting ways to display graph.
         /// </remarks>
-        public List<VectorN> GenerateTopologyData(int axisX, int axisY, double tolleranceAmount = 0.001)
+        public List<VectorN> GenerateTopologyData(int axisX, int axisY, double toleranceAmount = 0.01)
         {
+			_logger.Debug("Beginning topology generation...");
             List<VectorN> tempDataArray = new List<VectorN>();
 
-            // Copy array.
-            double[] inputLocal = _inputData;
+			// Copy array.
+			double[] inputLocal = new double[_inputData.Length];
+			for(int i = 0; i < inputLocal.Length; i++)
+			{
+				inputLocal[i] = _inputData[i];
+            }
+
             int playerInputLength = inputLocal.Length / 2;
 
-            inputLocal[playerInputLength + axisX] = 0;
-            inputLocal[playerInputLength + axisY] = 0;
+			VectorN variableDataVector = new VectorN(2);
+			variableDataVector[0] = 0;
+			variableDataVector[1] = 0;
 
-            int iterations = (int)(1.0/tolleranceAmount);
+			inputLocal[playerInputLength + axisX] = 0;
+			inputLocal[playerInputLength + axisY] = 0;
 
-            for(int i = 0; i < iterations; i++)
+			int iterations = (int)(1.0/ toleranceAmount);
+			_logger.Trace(string.Format("Running for {0} iterations.",iterations));
+
+			for (int i = 0; i < iterations; i++)
             {
                 for(int j = 0; j < iterations; j++)
                 {
                     double localOutNormalized =  (new VectorN(_nueralNetwork.Run(inputLocal))).Length;
+					
+					// I'm following unity's coordinate system. It's the easiest thing I can remember.
+					tempDataArray.Add(new VectorN(new double[3]{ i, localOutNormalized, j }));
 
-                    tempDataArray.Add(
-                        new VectorN(
-                            // I'm following unity's coordinate system. It's the easiest thing I can remember.
-                            new double[3]
-                            {
-                                inputLocal[playerInputLength + axisX],
-                                localOutNormalized,
-                                inputLocal[playerInputLength + axisY]
-                            }));
-
-                    inputLocal[playerInputLength + axisX] += tolleranceAmount * i;
-                    inputLocal[playerInputLength + axisY] += tolleranceAmount * j;
-                }
+                    inputLocal[playerInputLength + axisX] = i * toleranceAmount;
+                    inputLocal[playerInputLength + axisY] = j * toleranceAmount;
+				}
             }
 
+			// Create new plot set entry.
+			StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
+			_logger.Debug("Topology generation completed, data visualization can now be executed.");
             return tempDataArray;
         }
     }

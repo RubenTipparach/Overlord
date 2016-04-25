@@ -174,6 +174,66 @@ namespace Overlord
         }
 
 		/// <summary>
+		/// Gets the latest AI entry.
+		/// </summary>
+		/// <returns>Good shit.</returns>
+		public static CoastalRaidersFuedalResourceManager[] GetLatestAiEntry()
+		{
+			CoastalRaidersFuedalResourceManager latestAiP1 = null;
+			CoastalRaidersFuedalResourceManager latestAiP2 = null;
+
+			string cmdString = @"
+				SELECT  AD1.Name as player1, AD2.Name as player2,  ANNF.* 
+				FROM aoenn.ai_neural_network_feed ANNF
+					INNER JOIN ai_definition AD1
+						ON ANNF.p1Index = AD1.AIIndex
+					INNER JOIN ai_definition AD2
+						ON ANNF.p2Index = AD2.AIIndex
+				ORDER BY GameId DESC
+				LIMIT 1;
+				";
+
+			// Delegates allow me to take laziness to a whole new level.
+			ReadSql((MySqlDataReader msdr) =>
+			{
+				// Gets all that good data.
+				while (msdr.Read())
+				{
+					latestAiP1 = new CoastalRaidersFuedalResourceManager(
+									Convert.ToString(msdr["player1"]),
+									Convert.ToInt32(msdr["GameId"]),
+
+									Convert.ToDouble(msdr["p1Wood"]),
+									Convert.ToDouble(msdr["p1Food"]),
+									Convert.ToDouble(msdr["p1Stone"]),
+									Convert.ToDouble(msdr["p1Gold"]),
+									Convert.ToDouble(msdr["p1Builders"]),
+
+									Convert.ToInt32(msdr["p1WoodHighest"]),
+									Convert.ToInt32(msdr["p1FoodHighest"]),
+									Convert.ToInt32(msdr["p1GoldHighest"]),
+									Convert.ToInt32(msdr["p1StoneHighest"]));
+					latestAiP2 = new CoastalRaidersFuedalResourceManager(
+									Convert.ToString(msdr["player2"]),
+									Convert.ToInt32(msdr["GameId"]),
+
+									Convert.ToDouble(msdr["p2Wood"]),
+									Convert.ToDouble(msdr["p2Food"]),
+									Convert.ToDouble(msdr["p2Stone"]),
+									Convert.ToDouble(msdr["p2Gold"]),
+									Convert.ToDouble(msdr["p2Builders"]),
+
+									Convert.ToInt32(msdr["p2WoodHighest"]),
+									Convert.ToInt32(msdr["p2FoodHighest"]),
+									Convert.ToInt32(msdr["p2GoldHighest"]),
+									Convert.ToInt32(msdr["p2StoneHighest"]));
+				}
+			}, cmdString);
+
+			return new CoastalRaidersFuedalResourceManager[2] { latestAiP1, latestAiP2 };
+		}
+
+		/// <summary>
 		/// Retrieves the latest game information only if it is an unprocessed
 		/// record.
 		/// </summary>
@@ -221,20 +281,26 @@ namespace Overlord
             }, sqlCmd);
 		}
 
-        public static void SubmitPlotableData(List<VectorN> dataPoints)
+		/// <summary>
+		/// Submits the plotable data.
+		/// </summary>
+		/// <param name="dataPoints">The data points.</param>
+		public static void SubmitPlotableData(List<VectorN> dataPoints)
         {
-
+			// Select the max id, else default to 1.
             int maxDataId = 0;
-            string readCmd = "SELECT MAX(DataId) FROM aoenn.ai_plotable_data;";
+            string readCmd = "SELECT MAX(DataId) AS MaxRow FROM ai_plotset;";
+
             ReadSql((MySqlDataReader msdr) =>
             {
-                if (msdr.Read())
+                if (msdr.Read() && !Convert.IsDBNull(msdr["MaxRow"]))
                 {
                     maxDataId = Convert.ToInt32(msdr["MaxRow"]);
                 }
             }, readCmd);
 
-            StringBuilder sqlCmd = new StringBuilder(@"
+			// Insert newly generated data into the database for analysis.
+			StringBuilder sqlCmd = new StringBuilder(@"
 				INSERT INTO ai_plotable_data (DataId, X, Y, Z) VALUE ");
 
             List<string> rows = new List<string>(dataPoints.Count);
@@ -249,6 +315,42 @@ namespace Overlord
 
             ExecuteSql((MySqlCommand cmd) => {}, sqlCmd.ToString());
         }
+
+		/// <summary>
+		/// Creates the new plot entry and plotting definition.
+		/// </summary>
+		/// <param name="axisX">The axis x.</param>
+		/// <param name="axisY">The axis y.</param>
+		/// <param name="toleranceLevel">The tolerance level.</param>
+		public static void CreateNewPlot(int axisX, int axisY, double toleranceLevel)
+		{
+			int maxDataId = 0;
+			string readCmd = "SELECT MAX(DataId) AS MaxRow FROM ai_plotset;";
+
+			ReadSql((MySqlDataReader msdr) =>
+			{
+				if (msdr.Read() && !Convert.IsDBNull(msdr["MaxRow"]))
+				{
+					maxDataId = Convert.ToInt32(msdr["MaxRow"]);
+				}
+			}, readCmd);
+
+			// Increment max id.
+			maxDataId++;
+			// Insert newly generated data into the database for analysis.
+			string sqlCmd = @"
+				INSERT INTO ai_plotset (DataId, ToleranceLevel, AxisX, AxisY)
+				VALUE ( @DataId, @ToleranceLevel, @AxisX, @AxisY )";
+
+			ExecuteSql((MySqlCommand cmd) =>
+			{
+				var msqlPc = cmd.Parameters;
+				msqlPc.Add(new MySqlParameter("@DataId", maxDataId));
+				msqlPc.Add(new MySqlParameter("@ToleranceLevel", toleranceLevel));
+				msqlPc.Add(new MySqlParameter("@AxisX", axisX));
+				msqlPc.Add(new MySqlParameter("@AxisY", axisY));
+			}, sqlCmd);
+		}
 
         /// <summary>
         /// This method allows me to make more database connections.
