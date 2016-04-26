@@ -191,7 +191,18 @@ namespace Overlord.Learning
 
 			// push data
 			_climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
-			StreamUtilities.SubmitPlotableData(_climber.GenerateTopologyData(0, 1));
+
+            // Hardcoding these dimensions, I'm that lazy :[
+            int ordinalTracker = 1;
+            for(int i = 0; i < 4; i++)
+            {
+                for (int j = i+1; j < 5; j++)
+                {
+                    StreamUtilities.SubmitPlotableData(_climber.GenerateTopologyData(i, j), ordinalTracker);
+                    _logger.Debug(string.Format("Writing Axis{0} and Axis{1} with ordinal {2}.",i, j, ordinalTracker));
+                    ordinalTracker++;
+                }
+            }
 		}
 
 		/// <summary>

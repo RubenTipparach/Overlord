@@ -257,10 +257,33 @@ namespace Overlord.Search
         /// <returns>
         /// A random set of solution for the AI writer to take and apply to the game.
         /// </returns>
-        public double[] GenerateRandomSolution()
+        public void GenerateRandomSolution(int axisToRaise, double toleranceAmount = 0.01)
         {
-            //return _inputData;
-            throw new NotImplementedException("LOL this is TODO still.");
+            int playerInputLength = _inputData.Length / 2;
+
+            if (CheckGreaterThanOneCondition(_inputData[playerInputLength + axisToRaise] + toleranceAmount))
+            {
+                _logger.Error("Program is stuck at local Max." + FormatData());
+                return;
+            }
+
+            _inputData[playerInputLength + axisToRaise] += toleranceAmount;
+
+            double backoffAmount = toleranceAmount / (playerInputLength - 1);
+            for (int i = playerInputLength; i < _inputData.Length; i++)
+            {
+                if ((axisToRaise + playerInputLength) != i)
+                {
+                    // Stop the train when this condition is met!
+                    if (CheckSignCondition(_inputData[i] - backoffAmount))
+                    {
+                        _logger.Error("Program is stuck at local Max." + FormatData());
+                        return;
+                    }
+
+                    _inputData[i] -= (toleranceAmount / 4.0);
+                }
+            } 
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace OverlordVisualizer
         {
             InitializeComponent();
 			//GenerateChart();
-			GenerateNewChart();
+			GenerateNewChart(0,1);
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace OverlordVisualizer
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void button1_Click(object sender, EventArgs e)
         {
-            GenerateNewChart();
+            GenerateNewChart(0,1);
         }
 
 		/// <summary>
@@ -74,17 +74,20 @@ namespace OverlordVisualizer
         /// <summary>
         /// Generates the new chart.
         /// </summary>
-        public void GenerateNewChart()
+        public void GenerateNewChart(int axisX, int axisY)
         {
 			// First get the new max Id from  the datatable.
 			int maxDataId = 0;
+            int maxOrdinalId = 0;
 			double toleranceLevel = 0;
 
-			string readCmd = @"
-                SELECT DataId, ToleranceLevel, AxisX, AxisY
-				FROM ai_plotset
-				ORDER BY DataId DESC LIMIT 1;
-			";
+            this.chart1.Series.Clear();
+
+			string readCmd = string.Format(@"
+                SELECT DataId, ToleranceLevel, AxisX, AxisY, OrdinalId
+				FROM ai_plotset WHERE AxisX = {0} AND AxisY = {1}
+				ORDER BY DataId DESC, OrdinalId DESC LIMIT 1;
+			", axisX, axisY);
 
 
 			ReadSql((MySqlDataReader msdr, MySqlCommand cmd) =>
@@ -93,11 +96,12 @@ namespace OverlordVisualizer
 				{
 					maxDataId = Convert.ToInt32(msdr["DataId"]);
 					toleranceLevel = Convert.ToDouble(msdr["ToleranceLevel"]);
-				}
+                    maxOrdinalId = Convert.ToInt32(msdr["OrdinalId"]);
+                }
 			}, readCmd);
 
 			// Read fresh data from database.
-			string readPlotableSql = @"SELECT X,Y,Z  FROM ai_plotable_data WHERE DataId = " + maxDataId;
+			string readPlotableSql = @"SELECT X,Y,Z  FROM ai_plotable_data WHERE DataId = " + maxDataId + " AND OrdinalId = " + maxOrdinalId + ";";
 			List<VectorN> vectors = new List<VectorN>(10000); // initialized to 10,000 units. i.e. 100X100
 
 			ReadSql((MySqlDataReader msdr, MySqlCommand cmd) =>
@@ -180,7 +184,6 @@ namespace OverlordVisualizer
 					}
 				}
 
-
 				seriesSet[i].Legend = "Legend1";
 				seriesSet[i].ChartType = SeriesChartType.Line;
 				//seriesSet[i].Color = Color.FromArgb(100-i, i, 0);
@@ -191,7 +194,7 @@ namespace OverlordVisualizer
 			}
 
 
-			this.chart1.Size = new System.Drawing.Size(1319, 720);
+			// this.chart1.Size = new System.Drawing.Size(1319, 720);
 			this.chart1.TabIndex = 0;
 			((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
 			this.ResumeLayout(false);
@@ -229,6 +232,56 @@ namespace OverlordVisualizer
                     conn.Close();
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(0, 1);
+        }
+
+        private void Axis02Ordinal2_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(0, 2);
+        }
+
+        private void Axis03Ordinal3_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(0, 3);
+        }
+
+        private void Axis04Ordinal4_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(0, 4);
+        }
+
+        private void Axis12Ordinal5_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(1, 2);
+        }
+
+        private void Axis13Ordinal6_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(1, 3);
+        }
+
+        private void Axis14Ordinal7_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(1, 4);
+        }
+
+        private void Axis15Ordinal8_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(2, 3);
+        }
+
+        private void Axis16Ordinal9_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(2, 4);
+        }
+
+        private void Axis17Ordinal10_Click(object sender, EventArgs e)
+        {
+            GenerateNewChart(3, 4);
         }
     }
 }

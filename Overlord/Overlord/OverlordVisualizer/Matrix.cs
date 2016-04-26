@@ -27,6 +27,7 @@ namespace Overlord
 		/// The number of rows.
 		/// </summary>
 		private int _rows;
+
 		/// <summary>
 		/// The matrix constructor.
 		/// </summary>
