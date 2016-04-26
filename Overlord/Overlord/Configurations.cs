@@ -9,10 +9,19 @@ namespace Overlord
 {
 	public static class Configurations
 	{
-		public static readonly string ConnectionString = ConfigurationManager.AppSettings["MySqlConnString"];
+        /// <summary>
+        /// The connection string.
+        /// </summary>
+        public static readonly string ConnectionString = ConfigurationManager.AppSettings["MySqlConnString"];
 
-		public static readonly string TargetAoe2Path = ConfigurationManager.AppSettings["TargetAoe2Path"];
+        /// <summary>
+        /// The target aoe2 path.
+        /// </summary>
+        public static readonly string TargetAoe2Path = ConfigurationManager.AppSettings["TargetAoe2Path"];
 
-		public static readonly string TargetAoe2Script = ConfigurationManager.AppSettings["TargetAoe2Path"];
+        /// <summary>
+        /// The target aoe2 script.
+        /// </summary>
+        public static readonly string TargetAoe2Script = ConfigurationManager.AppSettings["TargetAoe2Path"];
 	}
 }

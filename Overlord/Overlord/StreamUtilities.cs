@@ -285,29 +285,33 @@ namespace Overlord
 		/// Submits the plotable data.
 		/// </summary>
 		/// <param name="dataPoints">The data points.</param>
-		public static void SubmitPlotableData(List<VectorN> dataPoints)
+		public static void SubmitPlotableData(List<VectorN> dataPoints, int ordinalId)
         {
 			// Select the max id, else default to 1.
             int maxDataId = 0;
-            string readCmd = "SELECT MAX(DataId) AS MaxRow FROM ai_plotset;";
+            int maxOrdinalId = 0;
+            string readCmd = @"
+                SELECT DataId AS MaxRow, OrdinalId AS MaxOrdinalId
+                FROM ai_plotset ORDER BY DataId DESC, OrdinalId DESC LIMIT 1; ";
 
             ReadSql((MySqlDataReader msdr) =>
             {
                 if (msdr.Read() && !Convert.IsDBNull(msdr["MaxRow"]))
                 {
                     maxDataId = Convert.ToInt32(msdr["MaxRow"]);
+                    maxOrdinalId = Convert.ToInt32(msdr["MaxOrdinalId"]);
                 }
             }, readCmd);
 
 			// Insert newly generated data into the database for analysis.
 			StringBuilder sqlCmd = new StringBuilder(@"
-				INSERT INTO ai_plotable_data (DataId, X, Y, Z) VALUE ");
+				INSERT INTO ai_plotable_data (DataId, X, Y, Z, OrdinalId) VALUE ");
 
             List<string> rows = new List<string>(dataPoints.Count);
 
             for (int i = 0; i < dataPoints.Count; i++)
             {
-                rows.Add(string.Format("( {0}, {1}, {2} ,{3} )", maxDataId, dataPoints[i][0], dataPoints[i][1], dataPoints[i][2]));
+                rows.Add(string.Format("( {0}, {1}, {2} ,{3}, {4} )", maxDataId, dataPoints[i][0], dataPoints[i][1], dataPoints[i][2], maxOrdinalId));
             }
 
             sqlCmd.Append(string.Join(",", rows));
@@ -324,23 +328,38 @@ namespace Overlord
 		/// <param name="toleranceLevel">The tolerance level.</param>
 		public static void CreateNewPlot(int axisX, int axisY, double toleranceLevel)
 		{
-			int maxDataId = 0;
-			string readCmd = "SELECT MAX(DataId) AS MaxRow FROM ai_plotset;";
+			int maxDataId = 1;
+            int maxOrdinalId = 0;
+			string readCmd = @"
+                SELECT DataId AS MaxRow, OrdinalId AS MaxOrdinalId
+                FROM ai_plotset ORDER BY DataId DESC, OrdinalId DESC LIMIT 1; ";
 
 			ReadSql((MySqlDataReader msdr) =>
 			{
 				if (msdr.Read() && !Convert.IsDBNull(msdr["MaxRow"]))
 				{
 					maxDataId = Convert.ToInt32(msdr["MaxRow"]);
+                    maxOrdinalId = Convert.ToInt32(msdr["MaxOrdinalId"]);
 				}
 			}, readCmd);
 
 			// Increment max id.
-			maxDataId++;
-			// Insert newly generated data into the database for analysis.
-			string sqlCmd = @"
-				INSERT INTO ai_plotset (DataId, ToleranceLevel, AxisX, AxisY)
-				VALUE ( @DataId, @ToleranceLevel, @AxisX, @AxisY )";
+            if(maxOrdinalId == 10)
+            {
+                //reset ordinal to 0.
+                maxDataId++;
+                maxOrdinalId = 1;
+            }
+            else
+            {
+                //use previeos data set, increment ordinal, should be 9
+                maxOrdinalId++;
+            }
+
+            // Insert newly generated data into the database for analysis.
+            string sqlCmd = @"
+				INSERT INTO ai_plotset (DataId, ToleranceLevel, AxisX, AxisY, OrdinalId)
+				VALUE ( @DataId, @ToleranceLevel, @AxisX, @AxisY, @OrdinalId )";
 
 			ExecuteSql((MySqlCommand cmd) =>
 			{
@@ -349,7 +368,8 @@ namespace Overlord
 				msqlPc.Add(new MySqlParameter("@ToleranceLevel", toleranceLevel));
 				msqlPc.Add(new MySqlParameter("@AxisX", axisX));
 				msqlPc.Add(new MySqlParameter("@AxisY", axisY));
-			}, sqlCmd);
+                msqlPc.Add(new MySqlParameter("@OrdinalId", maxOrdinalId));
+            }, sqlCmd);
 		}
 
         /// <summary>
