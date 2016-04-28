@@ -31,9 +31,9 @@ namespace OverlordVisualizer
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.button1 = new System.Windows.Forms.Button();
+            this.SubGraph1 = new System.Windows.Forms.Button();
             this.Axis01Ordinal1 = new System.Windows.Forms.Button();
             this.Axis02Ordinal2 = new System.Windows.Forms.Button();
             this.Axis03Ordinal3 = new System.Windows.Forms.Button();
@@ -44,27 +44,30 @@ namespace OverlordVisualizer
             this.Axis23Ordinal8 = new System.Windows.Forms.Button();
             this.Axis24Ordinal9 = new System.Windows.Forms.Button();
             this.Axis34Ordinal10 = new System.Windows.Forms.Button();
+            this.SubGraph2 = new System.Windows.Forms.Button();
+            this.SubGraph3 = new System.Windows.Forms.Button();
+            this.SubGraph4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // chart1
             // 
-            chartArea2.Name = "Default";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "Default";
+            this.chart1.ChartAreas.Add(chartArea4);
             this.chart1.Location = new System.Drawing.Point(12, 12);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(1120, 720);
             this.chart1.TabIndex = 0;
             // 
-            // button1
+            // SubGraph1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 738);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.SubGraph1.Location = new System.Drawing.Point(12, 738);
+            this.SubGraph1.Name = "SubGraph1";
+            this.SubGraph1.Size = new System.Drawing.Size(163, 23);
+            this.SubGraph1.TabIndex = 1;
+            this.SubGraph1.Text = "View sub graph 1";
+            this.SubGraph1.UseVisualStyleBackColor = true;
+            this.SubGraph1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Axis01Ordinal1
             // 
@@ -167,11 +170,44 @@ namespace OverlordVisualizer
             this.Axis34Ordinal10.UseVisualStyleBackColor = true;
             this.Axis34Ordinal10.Click += new System.EventHandler(this.Axis17Ordinal10_Click);
             // 
+            // SubGraph2
+            // 
+            this.SubGraph2.Location = new System.Drawing.Point(181, 738);
+            this.SubGraph2.Name = "SubGraph2";
+            this.SubGraph2.Size = new System.Drawing.Size(163, 23);
+            this.SubGraph2.TabIndex = 12;
+            this.SubGraph2.Text = "View sub graph 2";
+            this.SubGraph2.UseVisualStyleBackColor = true;
+            this.SubGraph2.Click += new System.EventHandler(this.SubGraph2_Click);
+            // 
+            // SubGraph3
+            // 
+            this.SubGraph3.Location = new System.Drawing.Point(350, 738);
+            this.SubGraph3.Name = "SubGraph3";
+            this.SubGraph3.Size = new System.Drawing.Size(163, 23);
+            this.SubGraph3.TabIndex = 13;
+            this.SubGraph3.Text = "View sub graph 3";
+            this.SubGraph3.UseVisualStyleBackColor = true;
+            this.SubGraph3.Click += new System.EventHandler(this.SubGraph3_Click);
+            // 
+            // SubGraph4
+            // 
+            this.SubGraph4.Location = new System.Drawing.Point(519, 738);
+            this.SubGraph4.Name = "SubGraph4";
+            this.SubGraph4.Size = new System.Drawing.Size(163, 23);
+            this.SubGraph4.TabIndex = 14;
+            this.SubGraph4.Text = "View sub graph 4";
+            this.SubGraph4.UseVisualStyleBackColor = true;
+            this.SubGraph4.Click += new System.EventHandler(this.SubGraph4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1343, 773);
+            this.Controls.Add(this.SubGraph4);
+            this.Controls.Add(this.SubGraph3);
+            this.Controls.Add(this.SubGraph2);
             this.Controls.Add(this.Axis34Ordinal10);
             this.Controls.Add(this.Axis24Ordinal9);
             this.Controls.Add(this.Axis23Ordinal8);
@@ -182,7 +218,7 @@ namespace OverlordVisualizer
             this.Controls.Add(this.Axis03Ordinal3);
             this.Controls.Add(this.Axis02Ordinal2);
             this.Controls.Add(this.Axis01Ordinal1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.SubGraph1);
             this.Controls.Add(this.chart1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -197,7 +233,7 @@ namespace OverlordVisualizer
         #endregion
 
         private Chart chart1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button SubGraph1;
         private System.Windows.Forms.Button Axis01Ordinal1;
         private System.Windows.Forms.Button Axis02Ordinal2;
         private System.Windows.Forms.Button Axis03Ordinal3;
@@ -208,6 +244,9 @@ namespace OverlordVisualizer
         private System.Windows.Forms.Button Axis23Ordinal8;
         private System.Windows.Forms.Button Axis24Ordinal9;
         private System.Windows.Forms.Button Axis34Ordinal10;
+        private System.Windows.Forms.Button SubGraph2;
+        private System.Windows.Forms.Button SubGraph3;
+        private System.Windows.Forms.Button SubGraph4;
     }
 }
 

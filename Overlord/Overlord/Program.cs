@@ -116,5 +116,10 @@ namespace Overlord
 			Console.SetOut(tmp);
 			Console.ReadKey();
 		}
+
+        public enum GenerationMode
+        {
+
+        }
 	}
 }

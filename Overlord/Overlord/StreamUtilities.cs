@@ -320,13 +320,54 @@ namespace Overlord
             ExecuteSql((MySqlCommand cmd) => {}, sqlCmd.ToString());
         }
 
-		/// <summary>
-		/// Creates the new plot entry and plotting definition.
-		/// </summary>
-		/// <param name="axisX">The axis x.</param>
-		/// <param name="axisY">The axis y.</param>
-		/// <param name="toleranceLevel">The tolerance level.</param>
-		public static void CreateNewPlot(int axisX, int axisY, double toleranceLevel)
+        public static void SubmitPlotableUnnormailizedData(List<VectorN> dataPoints, int ordinalId)
+        {
+            // Select the max id, else default to 1.
+            int maxDataId = 0;
+            int maxOrdinalId = 0;
+            string readCmd = @"
+                SELECT DataId AS MaxRow, OrdinalId AS MaxOrdinalId
+                FROM ai_plotset ORDER BY DataId DESC, OrdinalId DESC LIMIT 1; ";
+
+            ReadSql((MySqlDataReader msdr) =>
+            {
+                if (msdr.Read() && !Convert.IsDBNull(msdr["MaxRow"]))
+                {
+                    maxDataId = Convert.ToInt32(msdr["MaxRow"]);
+                    maxOrdinalId = Convert.ToInt32(msdr["MaxOrdinalId"]);
+                }
+            }, readCmd);
+
+            // Insert newly generated data into the database for analysis.
+            StringBuilder sqlCmd = new StringBuilder(@"
+				INSERT INTO ai_plotable_unnormalized_data (DataId, X, Y, Z1, Z2, Z3, Z4, OrdinalId) VALUE ");
+
+            List<string> rows = new List<string>(dataPoints.Count);
+
+            for (int i = 0; i < dataPoints.Count; i++)
+            {
+                rows.Add(string.Format("( {0}, {1}, {2} ,{3}, {4}, {5}, {6}, {7} )",
+                    maxDataId, dataPoints[i][0], dataPoints[i][1], 
+                    dataPoints[i][2], // Z1
+                    dataPoints[i][3], // Z2
+                    dataPoints[i][4], // Z3
+                    dataPoints[i][5], // Z4
+                    maxOrdinalId));
+            }
+
+            sqlCmd.Append(string.Join(",", rows));
+            sqlCmd.Append(";");
+
+            ExecuteSql((MySqlCommand cmd) => { }, sqlCmd.ToString());
+        }
+
+        /// <summary>
+        /// Creates the new plot entry and plotting definition.
+        /// </summary>
+        /// <param name="axisX">The axis x.</param>
+        /// <param name="axisY">The axis y.</param>
+        /// <param name="toleranceLevel">The tolerance level.</param>
+        public static void CreateNewPlot(int axisX, int axisY, double toleranceLevel)
 		{
 			int maxDataId = 1;
             int maxOrdinalId = 0;
@@ -371,6 +412,34 @@ namespace Overlord
                 msqlPc.Add(new MySqlParameter("@OrdinalId", maxOrdinalId));
             }, sqlCmd);
 		}
+
+        /// <summary>
+        /// Generates the new input.
+        /// </summary>
+        /// <param name="p1AndP2Input">The p1 and p2 input.</param>
+        public static void GenerateNewInput(double[] p1AndP2Input)
+        {
+            // First read from the database and do some stuff.
+            string insertIntoGameTable = @"INSERT INTO ai_game_table (IsReady, DateGamePlayed_CDT) VALUE( 0, NOW());";
+
+            ExecuteSql((MySqlCommand cmd) => { }, insertIntoGameTable);
+
+            // Insert player 1.
+            string insertP1IntoInputTable = string.Format(@"
+                INSERT INTO ai_economy_feudal_input (AIIndex, Wood, Food, Gold, Stone, Builders, GameId)
+                SELECT 1, '{0}', '{1}', '{2}', '{3}', '{4}', MAX(GameId) FROM ai_game_table;
+                ", p1AndP2Input[0], p1AndP2Input[1], p1AndP2Input[2], p1AndP2Input[3], p1AndP2Input[4]);
+
+            ExecuteSql((MySqlCommand cmd) => { }, insertP1IntoInputTable);
+
+            // Insert player 2.
+            string insertP2IntoInputTable = string.Format(@"
+                INSERT INTO ai_economy_feudal_input (AIIndex, Wood, Food, Gold, Stone, Builders, GameId)
+                SELECT 1, '{0}', '{1}', '{2}', '{3}', '{4}', MAX(GameId) FROM ai_game_table;
+                ", p1AndP2Input[5], p1AndP2Input[6], p1AndP2Input[7], p1AndP2Input[8], p1AndP2Input[9]);
+
+            ExecuteSql((MySqlCommand cmd) => { }, insertP2IntoInputTable);
+        }
 
         /// <summary>
         /// This method allows me to make more database connections.
@@ -440,8 +509,6 @@ namespace Overlord
 			}
 		}
 	
-
-
 		/// <summary>
 		/// Determines whether [is file locked] [the specified file].
 		/// Use this for checking if the recording file is in use. If it is, the program should not attempt to call it via the php script.
@@ -471,8 +538,33 @@ namespace Overlord
 					stream.Close();
 			}
 
-			//file is not locked
-			return false;
+            //file is not locked
+            return false;
 		}
-	}
+
+        public static bool CheckIfNewGameIsNeeded()
+        {
+            int c1 = 0;
+            int c2 = 0;
+
+            ReadSql((MySqlDataReader msdr) =>
+            {
+                if (msdr.Read() && !Convert.IsDBNull(msdr["C1"]))
+                {
+                    c1 = Convert.ToInt32(msdr["C1"]);
+                }
+            }, "SELECT count(*) as C1 FROM ai_economy_feudal_input; ");
+
+            ReadSql((MySqlDataReader msdr) =>
+            {
+                if (msdr.Read() && !Convert.IsDBNull(msdr["C2"]))
+                {
+                    c2 = Convert.ToInt32(msdr["C2"]);
+                }
+            }, "SELECT count(*) as C2 FROM ai_economy_feudal_output_raw; ");
+
+            return c1 == c2;
+        }
+    }
+
 }

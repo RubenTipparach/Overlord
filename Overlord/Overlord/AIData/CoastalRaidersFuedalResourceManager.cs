@@ -69,10 +69,18 @@ namespace Overlord
                      {
                         _sn_food_gatherer_percentage_fa,
                         _sn_wood_gatherer_percentage_fa,
-                        _sn_gold_gatherer_percentage_fa,
                         _sn_stone_gatherer_percentage_fa,
+                        _sn_gold_gatherer_percentage_fa,
                         _sn_percent_civilian_builders_fa
                      };
+            }
+            set
+            {
+                _sn_food_gatherer_percentage_fa = value[0];
+                _sn_wood_gatherer_percentage_fa = value[1];
+                _sn_stone_gatherer_percentage_fa = value[2];
+                _sn_gold_gatherer_percentage_fa = value[3];
+                _sn_percent_civilian_builders_fa = value[4];
             }
         }
 

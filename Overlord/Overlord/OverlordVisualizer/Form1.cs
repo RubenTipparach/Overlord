@@ -15,6 +15,11 @@ namespace OverlordVisualizer
 {
     public partial class Form1 : Form
     {
+        private int _dataId;
+        private int _axisX;
+        private int _axisY;
+        private int _ordinalId;
+
         public Form1()
         {
             InitializeComponent();
@@ -22,15 +27,6 @@ namespace OverlordVisualizer
 			GenerateNewChart(0,1);
 		}
 
-		/// <summary>
-		/// Handles the Click event of the button1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		private void button1_Click(object sender, EventArgs e)
-        {
-            GenerateNewChart(0,1);
-        }
 
 		/// <summary>
 		/// Generates the chart.
@@ -100,8 +96,13 @@ namespace OverlordVisualizer
                 }
 			}, readCmd);
 
-			// Read fresh data from database.
-			string readPlotableSql = @"SELECT X,Y,Z  FROM ai_plotable_data WHERE DataId = " + maxDataId + " AND OrdinalId = " + maxOrdinalId + ";";
+            _dataId = maxDataId;
+            _ordinalId = maxOrdinalId;
+            _axisX = axisX;
+            _axisY = axisY;
+
+            // Read fresh data from database.
+            string readPlotableSql = @"SELECT X,Y,Z  FROM ai_plotable_data WHERE DataId = " + maxDataId + " AND OrdinalId = " + maxOrdinalId + ";";
 			List<VectorN> vectors = new List<VectorN>(10000); // initialized to 10,000 units. i.e. 100X100
 
 			ReadSql((MySqlDataReader msdr, MySqlCommand cmd) =>
@@ -208,7 +209,7 @@ namespace OverlordVisualizer
         /// </summary>
         /// <param name="t"></param>
         /// <param name="cmdString"></param>
-        private static void ReadSql(Action<MySqlDataReader, MySqlCommand> buildDataSet, string cmdString)
+        public static void ReadSql(Action<MySqlDataReader, MySqlCommand> buildDataSet, string cmdString)
         {
             MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
@@ -282,6 +283,35 @@ namespace OverlordVisualizer
         private void Axis17Ordinal10_Click(object sender, EventArgs e)
         {
             GenerateNewChart(3, 4);
+        }
+
+        /// <summary>
+        /// Handles the Click event of the button1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 1);
+            aiView.Show();
+        }
+
+        private void SubGraph2_Click(object sender, EventArgs e)
+        {
+            AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 2);
+            aiView.Show();
+        }
+
+        private void SubGraph3_Click(object sender, EventArgs e)
+        {
+            AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 3);
+            aiView.Show();
+        }
+
+        private void SubGraph4_Click(object sender, EventArgs e)
+        {
+            AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 4);
+            aiView.Show();
         }
     }
 }

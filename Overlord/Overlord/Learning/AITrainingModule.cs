@@ -198,10 +198,20 @@ namespace Overlord.Learning
             {
                 for (int j = i+1; j < 5; j++)
                 {
+                    //write normalized data
                     StreamUtilities.SubmitPlotableData(_climber.GenerateTopologyData(i, j), ordinalTracker);
+
+                    //write unnormalized data.
+                    StreamUtilities.SubmitPlotableUnnormailizedData(_climber.GenerateUnormalizedTopologyData(i, j), ordinalTracker);
                     _logger.Debug(string.Format("Writing Axis{0} and Axis{1} with ordinal {2}.",i, j, ordinalTracker));
                     ordinalTracker++;
                 }
+            }
+
+            // If input table == output, then a new game is needed
+            if(StreamUtilities.CheckIfNewGameIsNeeded())
+            {
+                TriggerNewGame();
             }
 		}
 
@@ -212,8 +222,19 @@ namespace Overlord.Learning
 		public double[] GetIdealInputData()
 		{
 			_climber.FindOptimalSolution();
-			return _climber.GetIdealInputData;
+			return _climber.GetInputData;
 		}
+
+        /// <summary>
+        /// Gets the standard input data.
+        /// </summary>
+        /// <param name="axisToRaise">The axis to raise.</param>
+        /// <returns></returns>
+        public double[] GetStandardInputData(int axisToRaise)
+        {
+            _climber.GenerateRandomSolution(axisToRaise);
+            return _climber.GetInputData;
+        }
 
 		/// <summary>
 		/// This other constructor requires a network to be passed in.
@@ -231,20 +252,67 @@ namespace Overlord.Learning
 			throw new NotImplementedException("I'm not done with this yet!");
 		}
 
-		/// <summary>
-		/// This method pushes new data into the neuralNetwork along with existing data, and continues the training procedure.
-		/// </summary>
-		public void PushNewTrainingSet()
-		{
-			_numberOfInitialCycles = _numberOfContinuousCycles;
+        /// <summary>
+        /// This method pushes new data into the neuralNetwork along with existing data, and continues the training procedure.
+        /// </summary>
+        public void PushNewTrainingSet()
+        {
+            _numberOfInitialCycles = _numberOfContinuousCycles;
             _percent = 0;
-			_rawMgxStats = StreamUtilities.GetAiDataSet();
-			_nueralNetwork.Learn(CompileTrainingSet(_rawMgxStats), _numberOfContinuousCycles);
+            _rawMgxStats = StreamUtilities.GetAiDataSet();
+            _nueralNetwork.Learn(CompileTrainingSet(_rawMgxStats), _numberOfContinuousCycles);
 
-			_numberOfContinuousCycles++;
+            if (StreamUtilities.CheckIfNewGameIsNeeded())
+            {
+                TriggerNewGame();
+            }
 
-			_logger.Warn("Finished additional training cycle.");
+            //_numberOfContinuousCycles++; Why did I add this?
+            _logger.Warn(string.Format("Finished additional {0} training cycles.", _numberOfContinuousCycles));
+
 		}
+
+        /// <summary>
+        /// Triggers the new game.
+        /// </summary>
+        private void TriggerNewGame()
+        {
+            // Randomly tweak some inputs.
+            Random r = new Random();
+            int randomNum = r.Next(5);
+            while (!_climber.GenerateRandomSolution(randomNum))
+            {
+                randomNum = r.Next(5);
+            }
+
+            double[] input = new double[10];
+
+            input = _climber.GetInputData;
+
+            // Get a bunch of custom input stuff.
+            if (Configurations.UseCustomP1Input)
+            {
+                double[] newInput = Configurations.RetrievePlayer1Input();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    input[i] = newInput[i];
+                }
+            }
+
+            double[] p2Input = new double[]
+            {
+                input[5],
+                input[6],
+                input[7],
+                input[8],
+                input[9]
+            };
+
+            _currentStats.GetInputParams = p2Input;
+            _currentStats.GenerateNewAiFile(_aoe2Directory + "\\" + _aiScript);
+            StreamUtilities.GenerateNewInput(input);
+        }
 
 
 		/// <summary>
