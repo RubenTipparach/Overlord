@@ -257,14 +257,14 @@ namespace Overlord.Search
         /// <returns>
         /// A random set of solution for the AI writer to take and apply to the game.
         /// </returns>
-        public void GenerateRandomSolution(int axisToRaise, double toleranceAmount = 0.01)
+        public bool GenerateRandomSolution(int axisToRaise, double toleranceAmount = 0.01)
         {
             int playerInputLength = _inputData.Length / 2;
 
             if (CheckGreaterThanOneCondition(_inputData[playerInputLength + axisToRaise] + toleranceAmount))
             {
                 _logger.Error("Program is stuck at local Max." + FormatData());
-                return;
+                return false;
             }
 
             _inputData[playerInputLength + axisToRaise] += toleranceAmount;
@@ -278,12 +278,14 @@ namespace Overlord.Search
                     if (CheckSignCondition(_inputData[i] - backoffAmount))
                     {
                         _logger.Error("Program is stuck at local Max." + FormatData());
-                        return;
+                        return false;
                     }
 
                     _inputData[i] -= (toleranceAmount / 4.0);
                 }
-            } 
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -295,7 +297,7 @@ namespace Overlord.Search
         /// <remarks>
         /// This data is useless without running FindOptimalSolution().
         /// </remarks>
-        public double[] GetIdealInputData
+        public double[] GetInputData
         {
             get
             {
@@ -362,6 +364,66 @@ namespace Overlord.Search
 			// Create new plot set entry.
 			StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
 			_logger.Debug("Topology generation completed, data visualization can now be executed.");
+            return tempDataArray;
+        }
+
+        /// <summary>
+        /// Generates the unormalized topology data.
+        /// </summary>
+        /// <param name="axisX">The axis x.</param>
+        /// <param name="axisY">The axis y.</param>
+        /// <param name="toleranceAmount">The tolerance amount.</param>
+        /// <returns>Some vectors.</returns>
+        public List<VectorN> GenerateUnormalizedTopologyData(int axisX, int axisY, double toleranceAmount = 0.01)
+        {
+            _logger.Debug("Beginning unnomrailized* topology generation...");
+            List<VectorN> tempDataArray = new List<VectorN>();
+
+            // Copy array.
+            double[] inputLocal = new double[_inputData.Length];
+            for (int i = 0; i < inputLocal.Length; i++)
+            {
+                inputLocal[i] = _inputData[i];
+            }
+
+            int playerInputLength = inputLocal.Length / 2;
+
+            VectorN variableDataVector = new VectorN(2);
+            variableDataVector[0] = 0;
+            variableDataVector[1] = 0;
+
+            inputLocal[playerInputLength + axisX] = 0;
+            inputLocal[playerInputLength + axisY] = 0;
+
+            int iterations = (int)(1.0 / toleranceAmount);
+            _logger.Trace(string.Format("Running for {0} iterations.", iterations));
+
+            for (int i = 0; i < iterations; i++)
+            {
+                for (int j = 0; j < iterations; j++)
+                {
+                    VectorN unnormalized = new VectorN(_nueralNetwork.Run(inputLocal));
+
+                    // I'm following unity's coordinate system. It's the easiest thing I can remember.
+                    tempDataArray.Add(new VectorN(
+                        new double[6]
+                        {
+                            i,
+                            j,
+                            unnormalized[0],
+                            unnormalized[1],
+                            unnormalized[2],
+                            unnormalized[3]
+                        }));
+
+                    inputLocal[playerInputLength + axisX] = i * toleranceAmount;
+                    inputLocal[playerInputLength + axisY] = j * toleranceAmount;
+                }
+            }
+
+            // Create new plot set entry.
+            //StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
+            _logger.Debug("Topology generation completed, data visualization can now be executed.");
             return tempDataArray;
         }
     }
