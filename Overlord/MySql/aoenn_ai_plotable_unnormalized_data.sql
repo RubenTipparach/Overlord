@@ -18,28 +18,31 @@ USE `aoenn`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ai_game_table`
+-- Table structure for table `ai_plotable_unnormalized_data`
 --
 
-DROP TABLE IF EXISTS `ai_game_table`;
+DROP TABLE IF EXISTS `ai_plotable_unnormalized_data`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ai_game_table` (
-  `GameId` int(11) NOT NULL AUTO_INCREMENT,
-  `IsReady` bit(1) NOT NULL,
-  `DateGamePlayed_CDT` datetime DEFAULT NULL,
-  PRIMARY KEY (`GameId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+CREATE TABLE `ai_plotable_unnormalized_data` (
+  `DataId` int(11) NOT NULL,
+  `X` double NOT NULL,
+  `Y` double NOT NULL,
+  `Z1` double NOT NULL,
+  `Z2` double NOT NULL,
+  `Z3` double NOT NULL,
+  `Z4` double NOT NULL,
+  `OrdinalId` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ai_game_table`
+-- Dumping data for table `ai_plotable_unnormalized_data`
 --
 
-LOCK TABLES `ai_game_table` WRITE;
-/*!40000 ALTER TABLE `ai_game_table` DISABLE KEYS */;
-INSERT INTO `ai_game_table` VALUES (1,'','2016-04-11 17:01:35'),(2,'','2016-04-11 17:01:35'),(3,'','2016-04-11 17:01:35'),(4,'','2016-04-11 17:01:35'),(5,'','2016-04-11 17:01:35'),(6,'','2016-04-11 17:01:35'),(7,'','2016-04-11 17:01:35'),(8,'','2016-04-11 17:01:35'),(9,'','2016-04-11 17:01:35'),(10,'','2016-04-11 17:01:35'),(11,'','2016-04-11 17:01:35'),(12,'','2016-04-11 17:01:35'),(13,'','2016-04-23 21:02:39'),(14,'','2016-04-24 15:39:09');
-/*!40000 ALTER TABLE `ai_game_table` ENABLE KEYS */;
+LOCK TABLES `ai_plotable_unnormalized_data` WRITE;
+/*!40000 ALTER TABLE `ai_plotable_unnormalized_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ai_plotable_unnormalized_data` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

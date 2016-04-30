@@ -22,7 +22,7 @@ namespace Overlord
 		public static void DumpData(String filePathName, double[] dataArray)
         {
             var outDefault = Console.Out;
-
+           
             using (StreamWriter writer = new StreamWriter(filePathName))
             {
                 Console.SetOut(writer);
@@ -241,10 +241,14 @@ namespace Overlord
 		public static GameData GetLatestGame()
 		{
 			string sqlCmd = @"
-				SELECT GameId, IsReady, DateGamePlayed_CDT
-				FROM ai_game_table
-				WHERE IsReady = 0
-				ORDER BY GameId DESC LIMIT 1;";
+				SELECT GT.GameId, IsReady, DateGamePlayed_CDT
+                FROM ai_game_table GT
+	                INNER JOIN ai_economy_feudal_input Input
+		                ON Input.GameId = GT.GameId 
+	                LEFT join ai_economy_feudal_output_raw Output
+		                ON Output.GameId = GT.GameId
+                WHERE IsReady = 0 and Output.GameId is not null
+                ORDER BY GameId DESC LIMIT 1;";
 
 			GameData defaultDat = null;
 
@@ -435,7 +439,7 @@ namespace Overlord
             // Insert player 2.
             string insertP2IntoInputTable = string.Format(@"
                 INSERT INTO ai_economy_feudal_input (AIIndex, Wood, Food, Gold, Stone, Builders, GameId)
-                SELECT 1, '{0}', '{1}', '{2}', '{3}', '{4}', MAX(GameId) FROM ai_game_table;
+                SELECT 2, '{0}', '{1}', '{2}', '{3}', '{4}', MAX(GameId) FROM ai_game_table;
                 ", p1AndP2Input[5], p1AndP2Input[6], p1AndP2Input[7], p1AndP2Input[8], p1AndP2Input[9]);
 
             ExecuteSql((MySqlCommand cmd) => { }, insertP2IntoInputTable);

@@ -66,7 +66,7 @@ namespace Overlord.Search
 		/// <param name="toleranceAmount">
 		/// Defaults to 1/1,000th other wise specifiesthe incremental value of each controled vars.
 		/// </param>
-        public void FindOptimalSolution(double toleranceAmount = 0.001)
+        public void FindOptimalSolution(double toleranceAmount = 0.04)
         {
 			_logger.Warn("Finding optimal solution with Hill Climbing....");
 
@@ -204,11 +204,11 @@ namespace Overlord.Search
             }
             else if(Math.Sign(numberTest) == 0)
             {
-                return true;
+                return false;
             }
             else
             {
-                return true;
+                return false;
             }
         }
 
@@ -257,7 +257,7 @@ namespace Overlord.Search
         /// <returns>
         /// A random set of solution for the AI writer to take and apply to the game.
         /// </returns>
-        public bool GenerateRandomSolution(int axisToRaise, double toleranceAmount = 0.01)
+        public bool GenerateRandomSolution(int axisToRaise, double toleranceAmount = 0.04)
         {
             int playerInputLength = _inputData.Length / 2;
 
