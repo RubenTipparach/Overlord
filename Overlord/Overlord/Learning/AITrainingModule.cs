@@ -186,11 +186,14 @@ namespace Overlord.Learning
 			_nueralNetwork.Learn(CompileTrainingSet(_rawMgxStats), _numberOfInitialCycles);
 			_logger.Warn("Finished initial training cycle.");
 
-			// Get the latest dataset so we can generate some kind of graph and push the data set to database.
-			var aiTrainingSet = CompileTrainingSet(StreamUtilities.GetLatestAiEntry().ToList());
+            // Get the latest dataset so we can generate some kind of graph and push the data set to database.
+            var knowledgeBase = StreamUtilities.GetLatestAiEntry().ToList();
+            var aiTrainingSet = CompileTrainingSet(knowledgeBase);
 
-			// push data
-			_climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
+            _currentStats = knowledgeBase[knowledgeBase.Count - 1];
+
+            // push data
+            _climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
 
             // Hardcoding these dimensions, I'm that lazy :[
             int ordinalTracker = 1;
@@ -310,7 +313,7 @@ namespace Overlord.Learning
             };
 
             _currentStats.GetInputParams = p2Input;
-            _currentStats.GenerateNewAiFile(_aoe2Directory + "\\" + _aiScript);
+            _currentStats.GenerateNewAiFile(_aiScript);
             StreamUtilities.GenerateNewInput(input);
         }
 
@@ -345,6 +348,8 @@ namespace Overlord.Learning
 			return tset;
 		}
 
+
+        // What the f am I doing?
 		private void BackgroundTasks(object networkInput, TrainingEpochEventArgs args)
 		{
 			_errorList.AddLast(((BackpropagationNetwork)_nueralNetwork).MeanSquaredError);
