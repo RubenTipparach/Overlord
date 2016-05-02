@@ -71,6 +71,11 @@ namespace Overlord.Search
 			_logger.Warn("Finding optimal solution with Hill Climbing....");
 
             int playerInputLength = _inputData.Length / 2;
+            for (int i = playerInputLength; i < _inputData.Length; i++)
+            {
+                _inputData[i] = 0.2;
+            }
+
             int playerOutputLength = _outputData.Length / 2;
             double[] totalSums = FindSums(playerOutputLength);
             double[] totalDeviations = FindStandardDeviation(playerOutputLength, totalSums);
@@ -80,7 +85,7 @@ namespace Overlord.Search
             {
 				tries++;
 				// Compare output delta.
-				int minimumDeltaIndex = 0;
+				int minimumDeltaIndex = 5;
                 double currentDelta = _outputData[minimumDeltaIndex + playerOutputLength] - _outputData[minimumDeltaIndex];
 
                 // Find the least delta.
@@ -99,7 +104,7 @@ namespace Overlord.Search
                 // Decrease everything else by tolerance amount by tAm/number of other variables.
                 double distributeBackOff = toleranceAmount / (playerInputLength - 1);
 
-                for (int i = playerOutputLength; i < _outputData.Length; i++)
+                for (int i = playerInputLength; i < _inputData.Length; i++)
                 {
                     if (i == minimumDeltaIndex)
                     {
@@ -107,7 +112,9 @@ namespace Overlord.Search
                         if (CheckGreaterThanOneCondition(_inputData[i] + toleranceAmount))
                         {
                             _logger.Error("Program is stuck at local Max." + FormatData());
-                            return;
+                            // return;
+                            break;
+                            
                         }
 
                         _inputData[i] += toleranceAmount;
@@ -118,7 +125,8 @@ namespace Overlord.Search
                         if (CheckSignCondition(_inputData[i] - distributeBackOff))
                         {
                             _logger.Error("Program is stuck at local Max." + FormatData());
-                            return;
+                            // return;
+                            break;
                         }
 
                         _inputData[i] -= distributeBackOff;
