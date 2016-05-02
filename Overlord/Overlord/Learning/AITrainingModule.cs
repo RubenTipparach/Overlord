@@ -195,6 +195,7 @@ namespace Overlord.Learning
             // push data
             _climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
 
+
             // Hardcoding these dimensions, I'm that lazy :[
             int ordinalTracker = 1;
             for(int i = 0; i < 4; i++)
@@ -282,10 +283,19 @@ namespace Overlord.Learning
         {
             // Randomly tweak some inputs.
             Random r = new Random();
-            int randomNum = r.Next(5);
-            while (!_climber.GenerateRandomSolution(randomNum))
+
+            // Select optimization model.
+            if (Configurations.GameGenerationMode() == GameGenMode.HillClimbing)
             {
-                randomNum = r.Next(5);
+                _climber.FindOptimalSolution();
+            }
+            else
+            {
+                int randomNum = r.Next(5);
+                while (!_climber.GenerateRandomSolution(randomNum))
+                {
+                    randomNum = r.Next(5);
+                }
             }
 
             double[] input = new double[10];
