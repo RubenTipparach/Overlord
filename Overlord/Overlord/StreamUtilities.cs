@@ -324,6 +324,11 @@ namespace Overlord
             ExecuteSql((MySqlCommand cmd) => {}, sqlCmd.ToString());
         }
 
+        /// <summary>
+        /// Submits the plotable unnormailized data.
+        /// </summary>
+        /// <param name="dataPoints">The data points.</param>
+        /// <param name="ordinalId">The ordinal identifier.</param>
         public static void SubmitPlotableUnnormailizedData(List<VectorN> dataPoints, int ordinalId)
         {
             // Select the max id, else default to 1.
@@ -451,7 +456,7 @@ namespace Overlord
         /// </summary>
         /// <param name="t"></param>
         /// <param name="cmdString"></param>
-        private static void ReadSql(Action<MySqlDataReader> buildDataSet, string cmdString)
+        public static void ReadSql(Action<MySqlDataReader> buildDataSet, string cmdString)
 		{
 			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
@@ -481,12 +486,12 @@ namespace Overlord
 			}
 		}
 
-		/// <summary>
-		/// Use this method to apply changes to the database or trigger stored procedure events.
-		/// </summary>
-		/// <param name="buildSql"></param>
-		/// <param name="cmdString"></param>
-		private static void ExecuteSql(Action<MySqlCommand> buildSql, string cmdString)
+        /// <summary>
+        /// Use this method to apply changes to the database or trigger stored procedure events.
+        /// </summary>
+        /// <param name="buildSql"></param>
+        /// <param name="cmdString"></param>
+        public static void ExecuteSql(Action<MySqlCommand> buildSql, string cmdString)
 		{
 			MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 

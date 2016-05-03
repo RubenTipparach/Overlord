@@ -131,7 +131,6 @@ namespace Overlord
             }
 			else
 			{
-
 				GameData newGame = StreamUtilities.GetLatestGame();
 					
 				if(newGame != null)

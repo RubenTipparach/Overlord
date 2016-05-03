@@ -1,4 +1,5 @@
-﻿using NeuronDotNet.Core;
+﻿using MySql.Data.MySqlClient;
+using NeuronDotNet.Core;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -135,6 +136,9 @@ namespace Overlord.Search
 
                 // Execute the new learning set that was applied to input data. WARNING: Do not let the set become negative.
                 _outputData = _nueralNetwork.Run(_inputData);
+                _logger.Error("Network Input Attempt: " + FormatDataIntoString(_inputData));
+                _logger.Error("Network Output Recieved: " + FormatDataIntoString(_outputData));
+
 
                 // Revaluate to see if our totals are consistent. This will need some polishing so 
                 // that our wile loop has a reasonable base case.
@@ -145,7 +149,166 @@ namespace Overlord.Search
 			_logger.Warn(string.Format("Found a solution in {0} tries.", tries));
         }
 
-        
+        /// <summary>
+        /// Finds the optimal solution2.
+        /// This is my second attempt at writing a hill climbing algorithm. We should try and maximize the output first,
+        /// then begin out ascent.
+        /// </summary>
+        /// <param name="toleranceAmount">The tolerance amount.</param>
+        public void FindOptimalSolution2(double toleranceAmount = 0.04)
+        {
+            // Get maximum known score and apply it to the new data set, If old data set is used.
+            string maxPlayerVal = @"
+                SELECT GameId, p1Wood, p1Food, p1Gold, p1Stone, p1Builders,
+	                p2Wood, p2Food, p2Gold, p2Stone, p2Builders, 
+                    (p1WoodHighest + p1FoodHighest + p1GoldHighest + p1StoneHighest) AS EconScoreP1,
+                    (p2WoodHighest + p2FoodHighest + p2GoldHighest + p2StoneHighest) AS EconScoreP2
+                FROM aoenn.ai_neural_network_feed
+                WHERE (p2WoodHighest + p2FoodHighest + p2GoldHighest + p2StoneHighest)  = 
+                (
+	                SELECT MAX(p2WoodHighest + p2FoodHighest + p2GoldHighest + p2StoneHighest) AS EconScoreP2
+	                FROM aoenn.ai_neural_network_feed
+                );            
+            ";
+
+            double[] p1Input = null;
+            int econScoreP1;
+
+            double[] p2Input = null;
+            int econScoreP2;
+
+            // read sql and assign values.
+            StreamUtilities.ReadSql((MySqlDataReader reader) =>
+            {
+                if (reader.Read())
+                {
+                    p1Input = new double[]
+                    {
+                        Convert.ToDouble(reader["p1Wood"]),
+                        Convert.ToDouble(reader["p1Food"]),
+                        Convert.ToDouble(reader["p1Gold"]),
+                        Convert.ToDouble(reader["p1Stone"]),
+                        Convert.ToDouble(reader["p1Builders"])
+                    };
+
+                    p2Input = new double[]
+                    {
+                        Convert.ToDouble(reader["p2Wood"]),
+                        Convert.ToDouble(reader["p2Food"]),
+                        Convert.ToDouble(reader["p2Gold"]),
+                        Convert.ToDouble(reader["p2Stone"]),
+                        Convert.ToDouble(reader["p2Builders"])
+                    };
+
+                    econScoreP1 = Convert.ToInt32(reader["EconScoreP1"]);
+                    econScoreP2 = Convert.ToInt32(reader["EconScoreP2"]);
+                }
+            }, maxPlayerVal);
+
+            double[] p1CurrentInputContext = new double[5];
+            for(int i = 0; i < 5; i++)
+            {
+                p1CurrentInputContext[i] = _inputData[i];
+            }
+
+            // Seek second p1 input and find max of that, calculate the delta odds.
+            double[] p1AndP2Input = p1CurrentInputContext.Concat(p2Input).ToArray();
+            double[] p1AndP2Output = _nueralNetwork.Run(p1AndP2Input);
+
+            _logger.Error("Network Input Attempt: " + FormatDataIntoString(p1AndP2Input));
+            
+            // This is the predicted output of the aggregate, i.e. MAX or best outcome for p2.
+            // this result is vital to being hill climbing!
+            _logger.Error("Network Output Recieved: " + FormatDataIntoString(p1AndP2Output));
+
+            int minIndex = 0;
+
+            for(int i = 1; i < 5; i++ )
+            {
+                if (p1AndP2Output[5 + minIndex] > p1AndP2Output[5 + minIndex])
+                {
+                    minIndex = i;
+                }
+            }
+
+            //outputs split
+            double[] p1Output =
+            {
+                p1AndP2Output[0], p1AndP2Output[1], p1AndP2Output[2], p1AndP2Output[3]
+            };
+
+            double[] p2Output =
+            {
+                p1AndP2Output[4], p1AndP2Output[5], p1AndP2Output[6], p1AndP2Output[7]
+            };
+
+            //input split
+            double[] p1InputModified =
+            {
+                p1AndP2Input[0], p1AndP2Input[1], p1AndP2Input[2], p1AndP2Input[3], p1AndP2Input[4]
+            };
+
+            double[] p2InputModified =
+            {
+                p1AndP2Input[5], p1AndP2Input[6], p1AndP2Input[7], p1AndP2Input[8], p1AndP2Input[9]
+            };
+
+            //set climbing variables.
+            bool climbing = true;
+            double climbRate = toleranceAmount / 4;
+            int climbIndex = minIndex;
+            double climbedSum = SumVector(p2Output);
+
+            //some general sense of climbing.
+            while (climbing)
+            {
+                climbIndex = (climbIndex + 1) % 5;
+                if(climbIndex == minIndex)
+                {
+                    climbIndex = (climbIndex + 1) % 5;
+                }
+
+                p2InputModified[minIndex] += climbRate;
+                p2InputModified[climbIndex] -= climbRate;
+
+                double[] p1AndP2OutputPrime = _nueralNetwork.Run(p1InputModified.Concat(p2InputModified).ToArray());
+                double currentAttempt = SumVector(new double[]{
+                    p1AndP2OutputPrime[4], p1AndP2OutputPrime[5],p1AndP2OutputPrime[6],p1AndP2OutputPrime[7]
+                });
+
+                _logger.Error("Network Input Attempt: " + FormatDataIntoString(p1InputModified.Concat(p2InputModified).ToArray()));
+                _logger.Error("Network Output Recieved: " + FormatDataIntoString(p1AndP2OutputPrime));
+
+                if (currentAttempt < climbedSum)
+                {
+                    climbing = false;
+                    p2InputModified[minIndex] -= climbRate;
+                    p2InputModified[climbIndex] += climbRate;
+                }
+            }
+
+            // Write out to an output.
+            double[] p1AndP2OutputFinal = _nueralNetwork.Run(p1InputModified.Concat(p2InputModified).ToArray());
+            _logger.Error("Network Input Attempt: " + FormatDataIntoString(p1InputModified.Concat(p2InputModified).ToArray()));
+            _logger.Error("Network Output Recieved: " + FormatDataIntoString(p1AndP2OutputFinal));
+        }
+
+        /// <summary>
+        /// Sums the vector.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        /// <returns></returns>
+        private double SumVector(double[] output)
+        {
+            double result = 0;
+            for (int i = 0; i < output.Length; i++)
+            {
+                result += output[i];
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Finds the sums.
         /// </summary>
@@ -433,6 +596,32 @@ namespace Overlord.Search
             //StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
             _logger.Debug("Topology generation completed, data visualization can now be executed.");
             return tempDataArray;
+        }
+
+        /// <summary>
+        /// Formats the data into string.
+        /// </summary>
+        /// <param name="dataArray">The data array.</param>
+        /// <returns></returns>
+        private string FormatDataIntoString(double[] dataArray)
+        {
+            string output = "[ ";
+
+            for (int i = 0; i < dataArray.Length; i++)
+            {
+                if (i != dataArray.Length - 1)
+                {
+                    output += dataArray[i] + ", ";
+                }
+                else
+                {
+                    output += dataArray[i];
+                }
+            }
+
+            output += " ]";
+
+            return output;
         }
     }
 }
