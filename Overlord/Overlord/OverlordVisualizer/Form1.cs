@@ -79,9 +79,11 @@ namespace OverlordVisualizer
 
             this.chart1.Series.Clear();
 
+			
 			string readCmd = string.Format(@"
                 SELECT DataId, ToleranceLevel, AxisX, AxisY, OrdinalId
 				FROM ai_plotset WHERE AxisX = {0} AND AxisY = {1}
+					
 				ORDER BY DataId DESC, OrdinalId DESC LIMIT 1;
 			", axisX, axisY);
 
@@ -235,7 +237,13 @@ namespace OverlordVisualizer
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the button2 control.
+		/// These functions get the various combinations of pairs of Input variable to find the highest degree of corelation.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void button2_Click(object sender, EventArgs e)
         {
             GenerateNewChart(0, 1);
         }
@@ -313,5 +321,29 @@ namespace OverlordVisualizer
             AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 4);
             aiView.Show();
         }
-    }
+
+		private void TurnLeft_Click(object sender, EventArgs e)
+		{
+			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2 > -180)
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2;
+			}
+			else
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = 180;
+			}
+		}
+
+		private void TurnRight_Click(object sender, EventArgs e)
+		{
+			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2 < 180)
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2;
+			}
+			else
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = -180;
+            }
+		}
+	}
 }

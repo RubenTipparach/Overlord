@@ -8,8 +8,13 @@ using System.Text;
 
 namespace OverlordService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
-    [ServiceContract]
+	// NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.	
+	/// <summary>
+	/// This stuff was never really finished. It was intended to allow multiple users to link up with a centraly AI hosted on the cloud
+	/// This "Overlord" AI would foresee all the games being played and learn from them. Eventually it would pass out these AI scripts written to
+   ///  everybody's AoE2 directory and update the AI.
+	/// </summary>
+	[ServiceContract]
     public interface IService1
     {
 

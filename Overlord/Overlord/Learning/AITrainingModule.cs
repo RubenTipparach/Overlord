@@ -175,7 +175,7 @@ namespace Overlord.Learning
 			_nueralNetwork.EndEpochEvent += 
 				(object networkInput, TrainingEpochEventArgs args) =>
 				{
-					if (_percent % (_numberOfInitialCycles/10) == 0 && _percent > 0)
+					if (_percent % (_numberOfInitialCycles/100) == 0 && _percent > 0)
 					{
 						_logger.Info(string.Format("Precent completed {0}%", _percent / (_numberOfInitialCycles/100)));
 					}
@@ -192,12 +192,20 @@ namespace Overlord.Learning
 
             _currentStats = knowledgeBase[knowledgeBase.Count - 1];
 
-            // push data
-            _climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
+			// push data, hacked to show simple output
+			//double[] veryFirstInput
+			//	 =
+			//{
+			//	0.2,0.2,0.2,0.2,0.2,
+			//	0.2,0.2,0.2,0.2,0.2
+			//};
+
+			_climber = new HillClimbing(aiTrainingSet[0].InputVector, _nueralNetwork);
+			// _climber = new HillClimbing(veryFirstInput, _nueralNetwork);
 
 
-            // Hardcoding these dimensions, I'm that lazy :[
-            int ordinalTracker = 1;
+			// Hardcoding these dimensions, I'm that lazy :[
+			int ordinalTracker = 1;
             for(int i = 0; i < 4; i++)
             {
                 for (int j = i+1; j < 5; j++)

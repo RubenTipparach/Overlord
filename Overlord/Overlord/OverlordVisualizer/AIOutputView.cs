@@ -140,5 +140,34 @@ namespace OverlordVisualizer
             this.ResumeLayout(false);
             this.Refresh();
         }
-    }
+
+		private void TurnLeft_Click(object sender, EventArgs e)
+		{
+			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2 > -180)
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2;
+			}
+			else
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = 180;
+			}
+		}
+
+		private void TurnRight_Click(object sender, EventArgs e)
+		{
+			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2 < 180)
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2;
+			}
+			else
+			{
+				chart1.ChartAreas["Default"].Area3DStyle.Rotation = -180;
+			}
+		}
+
+		private void label2_Click(object sender, EventArgs e)
+		{
+
+		}
+	}
 }
