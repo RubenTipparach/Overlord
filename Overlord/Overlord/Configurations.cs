@@ -36,9 +36,13 @@ namespace Overlord
             {
                 return GameGenMode.Random;
             }
-            else
+            else if( genMode == "HillClimbing")
             {
                 return GameGenMode.HillClimbing;
+            }
+            else
+            {
+                return GameGenMode.HillClimbing2;
             }
         }
 
@@ -81,6 +85,7 @@ namespace Overlord
     public enum GameGenMode
     {
         Random,
-        HillClimbing
+        HillClimbing,
+        HillClimbing2
     }
 }

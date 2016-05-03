@@ -289,6 +289,10 @@ namespace Overlord.Learning
             {
                 _climber.FindOptimalSolution();
             }
+            else if(Configurations.GameGenerationMode() == GameGenMode.HillClimbing2)
+            {
+                _climber.FindOptimalSolution2();
+            }
             else
             {
                 int randomNum = r.Next(5);

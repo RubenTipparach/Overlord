@@ -17,7 +17,8 @@ namespace Overlord
 		{
 			//Initialize example matrices to teach neural net.
 			Matrix xArray = new Matrix(
-				new double[4, 3] {// columns then rows.... ugh stupid c# 
+				new double[4, 3] {
+                    // columns then rows.... ugh stupid c# 
 					{0,0,1},
 					{0,1,1},
 					{1,0,1},
