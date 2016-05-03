@@ -52,7 +52,7 @@ namespace Overlord.Search
         public HillClimbing(double[] incomming, Network nueralNetwork)
         {
             _inputData = incomming;
-            _nueralNetwork = nueralNetwork;
+			_nueralNetwork = nueralNetwork;
             _outputData = _nueralNetwork.Run(_inputData);
         }
 
@@ -223,9 +223,10 @@ namespace Overlord.Search
 
             int minIndex = 0;
 
-            for(int i = 1; i < 5; i++ )
+			//find min index
+            for(int i = 1; i < 4; i++ )
             {
-                if (p1AndP2Output[5 + minIndex] > p1AndP2Output[5 + minIndex])
+                if (p1AndP2Output[4 + minIndex] > p1AndP2Output[4 + minIndex])
                 {
                     minIndex = i;
                 }
@@ -258,14 +259,16 @@ namespace Overlord.Search
             double climbRate = toleranceAmount / 4;
             int climbIndex = minIndex;
             double climbedSum = SumVector(p2Output);
-
+			int maxAttemps = 10000;
+			int attemps = 0;
             //some general sense of climbing.
-            while (climbing)
+            while (climbing && attemps < maxAttemps)
             {
                 climbIndex = (climbIndex + 1) % 5;
                 if(climbIndex == minIndex)
                 {
                     climbIndex = (climbIndex + 1) % 5;
+
                 }
 
                 p2InputModified[minIndex] += climbRate;
@@ -281,10 +284,25 @@ namespace Overlord.Search
 
                 if (currentAttempt < climbedSum)
                 {
-                    climbing = false;
+                    // climbing = false;
                     p2InputModified[minIndex] -= climbRate;
                     p2InputModified[climbIndex] += climbRate;
                 }
+
+				// find new min index if next climb index is min index
+				if ((climbIndex + 1) % 5 == minIndex)
+				{
+					for (int i = 1; i < 5; i++)
+					{
+						if (p1AndP2OutputPrime[4 + minIndex] > p1AndP2OutputPrime[4 + minIndex])
+						{
+							minIndex = i;
+						}
+					}
+				}
+
+
+				attemps++;
             }
 
             // Write out to an output.
