@@ -611,7 +611,7 @@ namespace Overlord.Search
             }
 
             // Create new plot set entry.
-            //StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
+            // StreamUtilities.CreateNewPlot(axisX, axisY, toleranceAmount);
             _logger.Debug("Topology generation completed, data visualization can now be executed.");
             return tempDataArray;
         }

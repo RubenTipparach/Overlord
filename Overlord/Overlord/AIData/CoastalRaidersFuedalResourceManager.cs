@@ -30,14 +30,14 @@ namespace Overlord
 		private int _gameNumber;
 		private string _clonePrefix = "";
 
-        //input
+        // Input
         private double _sn_food_gatherer_percentage_fa;
         private double _sn_wood_gatherer_percentage_fa;
         private double _sn_gold_gatherer_percentage_fa;
         private double _sn_stone_gatherer_percentage_fa;
         private double _sn_percent_civilian_builders_fa;
 
-        //output
+        // Output
         private int _food_Score;
         private int _wood_Score;
         private int _stone_Score;

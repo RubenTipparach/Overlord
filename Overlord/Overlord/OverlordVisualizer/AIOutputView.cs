@@ -13,16 +13,47 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace OverlordVisualizer
 {
-    public partial class AIOutputView : Form
+	/// <summary>
+	/// This class generates a sub view of the unormalized prediction data
+	/// for the outcome of each game category.
+	/// </summary>
+	/// <seealso cref="System.Windows.Forms.Form" />
+	public partial class AIOutputView : Form
     {
-        private int _dataId;
-        private int _axisX;
-        private int _axisY;
-        private int _ordinalId;
+		/// <summary>
+		/// The data identifier.
+		/// </summary>
+		private int _dataId;
 
-        private int _zNumber;
+		/// <summary>
+		/// The axis x.
+		/// </summary>
+		private int _axisX;
 
-        public AIOutputView(int dataId, int axisX, int axisY, int ordinalId, int zNumber)
+		/// <summary>
+		/// The axis y.
+		/// </summary>
+		private int _axisY;
+
+		/// <summary>
+		/// The ordinal identifier.
+		/// </summary>
+		private int _ordinalId;
+
+		/// <summary>
+		/// The z number.
+		/// </summary>
+		private int _zNumber;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIOutputView"/> class.
+		/// </summary>
+		/// <param name="dataId">The data identifier.</param>
+		/// <param name="axisX">The axis x.</param>
+		/// <param name="axisY">The axis y.</param>
+		/// <param name="ordinalId">The ordinal identifier.</param>
+		/// <param name="zNumber">The z number.</param>
+		public AIOutputView(int dataId, int axisX, int axisY, int ordinalId, int zNumber)
         {
             _dataId = dataId;
             _axisX = axisX;
@@ -34,7 +65,10 @@ namespace OverlordVisualizer
             DrawChart();
         }
 
-        public void DrawChart()
+		/// <summary>
+		/// Draws the chart.
+		/// </summary>
+		public void DrawChart()
         {
             // Read fresh data from database.
             string readPlotableSql = string.Format(@"
@@ -141,6 +175,11 @@ namespace OverlordVisualizer
             this.Refresh();
         }
 
+		/// <summary>
+		/// Handles the Click event of the TurnLeft control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void TurnLeft_Click(object sender, EventArgs e)
 		{
 			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2 > -180)
@@ -153,6 +192,11 @@ namespace OverlordVisualizer
 			}
 		}
 
+		/// <summary>
+		/// Handles the Click event of the TurnRight control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void TurnRight_Click(object sender, EventArgs e)
 		{
 			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2 < 180)
@@ -165,9 +209,13 @@ namespace OverlordVisualizer
 			}
 		}
 
+		/// <summary>
+		/// Handles the Click event of the label2 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void label2_Click(object sender, EventArgs e)
 		{
-
 		}
 	}
 }

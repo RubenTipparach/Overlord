@@ -11,9 +11,13 @@ using System.Data;
 
 namespace Overlord
 {
-    public static class StreamUtilities
+	/// <summary>
+	/// This is a collection of utility methods designed to allow access to the database.
+	/// Eventually I got tired of going back and forth between classes and started calling the SQL methods from them.
+	/// Still has the majority of SQL functionalities embeded in here though.
+	/// </summary>
+	public static class StreamUtilities
     {
-
 		/// <summary>
 		/// Only supports singular array at the moment, dumping complex data table is on my todo list.
 		/// </summary>
@@ -551,7 +555,11 @@ namespace Overlord
             return false;
 		}
 
-        public static bool CheckIfNewGameIsNeeded()
+		/// <summary>
+		/// Checks if new game is needed.
+		/// </summary>
+		/// <returns></returns>
+		public static bool CheckIfNewGameIsNeeded()
         {
             int c1 = 0;
             int c2 = 0;
@@ -575,5 +583,4 @@ namespace Overlord
             return c1 == c2;
         }
     }
-
 }

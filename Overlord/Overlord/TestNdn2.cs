@@ -14,7 +14,8 @@ namespace Overlord
 		public static double PercentComplete = 0;
 
 		/// <summary>
-		/// Created a bullshit method to train bullshit results.
+		/// Used for training Binary inputs/outputs.
+		/// It figures out the corellation between these two values very nicely.
 		/// </summary>
 		/// <param name="writer"></param>
 		public TestNdn2(

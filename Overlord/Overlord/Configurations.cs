@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Overlord
 {
+	/// <summary>
+	/// This stores a mapping to the App.config file.
+	/// </summary>
 	public static class Configurations
 	{
         /// <summary>
@@ -46,15 +49,17 @@ namespace Overlord
             }
         }
 
-        public static readonly bool UseCustomP1Input = Convert.ToBoolean(ConfigurationManager.AppSettings["UseCustomEnemy"]);
+		/// <summary>
+		/// The use custom p1 input flag.
+		/// </summary>
+		public static readonly bool UseCustomP1Input = Convert.ToBoolean(ConfigurationManager.AppSettings["UseCustomEnemy"]);
+
         /// <summary>
-        /// Retrieves the player1 input.
+        /// Retrieves the player1 input as specified in the app.config file.
         /// </summary>
         /// <returns></returns>
         public static double[] RetrievePlayer1Input()
         {
-          
-
             if(UseCustomP1Input)
             {
                 return new double[]
@@ -79,10 +84,16 @@ namespace Overlord
             }
         }
 
-        public static readonly bool AutoGenerateAi = Convert.ToBoolean(ConfigurationManager.AppSettings["AutoGenerateNewAI"]);
+		/// <summary>
+		/// The automatic generate ai flag. If true, then this will write to the specified AI folder.
+		/// </summary>
+		public static readonly bool AutoGenerateAi = Convert.ToBoolean(ConfigurationManager.AppSettings["AutoGenerateNewAI"]);
     }
 
-    public enum GameGenMode
+	/// <summary>
+	/// Game mode options.
+	/// </summary>
+	public enum GameGenMode
     {
         Random,
         HillClimbing,

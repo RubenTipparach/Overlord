@@ -370,12 +370,14 @@ namespace Overlord.Learning
 			return tset;
 		}
 
-
-        // What the f am I doing?
+		/// <summary>
+		/// This is designed to run any end of epoch events.
+		/// </summary>
+		/// <param name="networkInput">The network input.</param>
+		/// <param name="args">The <see cref="TrainingEpochEventArgs"/> instance containing the event data.</param>
 		private void BackgroundTasks(object networkInput, TrainingEpochEventArgs args)
 		{
 			_errorList.AddLast(((BackpropagationNetwork)_nueralNetwork).MeanSquaredError);
-			// ugh whatever else is supposed to go here.
 		}
 	}
 }
