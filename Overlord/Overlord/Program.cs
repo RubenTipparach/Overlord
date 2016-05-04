@@ -49,7 +49,7 @@ namespace Overlord
 		/// <param name="args">The arguments.</param>
 		public static void Main(string[] args)
 		{
-			// This is how I like my consoles.
+			// Setting some console colors.
 			Console.BackgroundColor = ConsoleColor.DarkBlue;
 			Console.Clear();
 
@@ -57,7 +57,7 @@ namespace Overlord
 
             string datasource = Convert.ToString(ConfigurationManager.AppSettings["Datasource"]);
 
-			// Time to pump this mofo with some shit.
+			// Adding some data from the MySql database.
             if (datasource == "Database")
             {
                 _logger.Info("Using learning engine.");
@@ -66,8 +66,8 @@ namespace Overlord
             }
             else if (datasource == "Local")
             {
-                _logger.Info("Using local debugger.");
-                // Run using local ai parser
+				// Run using local ai parser (this method is now deprecated).
+				_logger.Info("Using local debugger.");
             }
             else
             {
@@ -77,6 +77,9 @@ namespace Overlord
             _logger.Info("Program ended.");
 		}
 
+		/// <summary>
+		/// Old method used to test ANN stuff.
+		/// </summary>
 		static void Dump()
 		{
 			//To do write unit test for my Matrix/Vector library, maybe not since I went with a framework instead.
@@ -116,10 +119,5 @@ namespace Overlord
 			Console.SetOut(tmp);
 			Console.ReadKey();
 		}
-
-        public enum GenerationMode
-        {
-
-        }
 	}
 }

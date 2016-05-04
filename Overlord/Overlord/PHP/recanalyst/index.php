@@ -1,4 +1,10 @@
 <?
+    /*
+    * This file was designed to test the capabilites of the RecAnalyst Library.
+    * A library for scanning and parsing .mgx data from Age Of Empires 2.
+    * Could be useful for AI initial game state modeling.
+    */
+
 
     spl_autoload_register(function ($class) {
         if (substr($class, 0, 11) === 'RecAnalyst\\') {

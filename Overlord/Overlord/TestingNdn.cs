@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 
 namespace Overlord
 {
-	
+	/// <summary>
+	/// This class was used as a test to construct a sample neural network model.
+	/// </summary>
 	public class TestingNdn 
 	{
 		public static double PercentComplete = 0;
@@ -64,7 +66,6 @@ namespace Overlord
 
 			network.Learn(trainingSet, numberOfCycles);
 
-			// idk what this is for....
 			double[] indices = new double[numberOfCycles];
 			// for (int i = 0; i < numberOfCycles; i++) { indices[i] = i; } .. oh nvm, its for graphing the learning curve
 

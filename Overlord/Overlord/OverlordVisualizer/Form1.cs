@@ -13,23 +13,45 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace OverlordVisualizer
 {
-    public partial class Form1 : Form
+	/// <summary>
+	/// This is the main form class used for generating 3D visualization of Neural Network training data output.
+	/// </summary>
+	/// <seealso cref="System.Windows.Forms.Form" />
+	public partial class Form1 : Form
     {
-        private int _dataId;
-        private int _axisX;
-        private int _axisY;
-        private int _ordinalId;
+		/// <summary>
+		/// The data identifier.
+		/// </summary>
+		private int _dataId;
 
-        public Form1()
+		/// <summary>
+		/// The axis x that we will use to retrieve Variable 1. Food, Wood, ...etc.
+		/// </summary>
+		private int _axisX;
+
+		/// <summary>
+		/// The axis y that we will use to retrieve Variable 2. Any other attribute that is not axis X.
+		/// </summary>
+		private int _axisY;
+
+		/// <summary>
+		/// The ordinal identifier. Just an index column used to help find data.
+		/// </summary>
+		private int _ordinalId;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Form1"/> class.
+		/// </summary>
+		public Form1()
         {
             InitializeComponent();
-			//GenerateChart();
+			// GenerateChart();
 			GenerateNewChart(0,1);
 		}
 
 
 		/// <summary>
-		/// Generates the chart.
+		/// Generates the chart. Old method just used to test drawing charts.
 		/// </summary>
 		void GenerateChart()
         {
@@ -67,10 +89,12 @@ namespace OverlordVisualizer
 		    // chart1.Series["Series2"]["ShowMarkerLines"] = "true";
         }
 
-        /// <summary>
-        /// Generates the new chart.
-        /// </summary>
-        public void GenerateNewChart(int axisX, int axisY)
+		/// <summary>
+		/// Generates the new chart. Is used to query data and plot the 3D chart.
+		/// </summary>
+		/// <param name="axisX">The axis x.</param>
+		/// <param name="axisY">The axis y.</param>
+		public void GenerateNewChart(int axisX, int axisY)
         {
 			// First get the new max Id from  the datatable.
 			int maxDataId = 0;
@@ -78,7 +102,6 @@ namespace OverlordVisualizer
 			double toleranceLevel = 0;
 
             this.chart1.Series.Clear();
-
 			
 			string readCmd = string.Format(@"
                 SELECT DataId, ToleranceLevel, AxisX, AxisY, OrdinalId
@@ -123,12 +146,10 @@ namespace OverlordVisualizer
 			}, readPlotableSql);
 
 			// Take a list of vectors, and plot them!
-
-
 			ChartArea chartArea1 = new ChartArea();
 			List<Series> seriesSet = new List<Series>(100);
-			//this.chart1 = new Chart();
 
+			//this.chart1 = new Chart();
 			((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
 			this.SuspendLayout();
 
@@ -205,13 +226,13 @@ namespace OverlordVisualizer
 
 		}
 
-        /// <summary>
-        /// This method allows me to make more database connections.
-        /// Maybe I should keep one open in another method?
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="cmdString"></param>
-        public static void ReadSql(Action<MySqlDataReader, MySqlCommand> buildDataSet, string cmdString)
+		/// <summary>
+		/// This method allows me to make more database connections.
+		/// Maybe I should keep one open in another method?
+		/// </summary>
+		/// <param name="buildDataSet">The build data set.</param>
+		/// <param name="cmdString">The command string.</param>
+		public static void ReadSql(Action<MySqlDataReader, MySqlCommand> buildDataSet, string cmdString)
         {
             MySqlConnection conn = new MySqlConnection(Configurations.ConnectionString);
 
@@ -238,90 +259,155 @@ namespace OverlordVisualizer
         }
 
 		/// <summary>
-		/// Handles the Click event of the button2 control.
+		/// This button maps the Food, Wood axis to the X,Z coordinate (Y is up).
 		/// These functions get the various combinations of pairs of Input variable to find the highest degree of corelation.
 		/// </summary>
 		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		/// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
 		private void button2_Click(object sender, EventArgs e)
         {
             GenerateNewChart(0, 1);
         }
 
-        private void Axis02Ordinal2_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis02Ordinal2 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis02Ordinal2_Click(object sender, EventArgs e)
         {
             GenerateNewChart(0, 2);
         }
 
-        private void Axis03Ordinal3_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis03Ordinal3 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis03Ordinal3_Click(object sender, EventArgs e)
         {
             GenerateNewChart(0, 3);
         }
 
-        private void Axis04Ordinal4_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis04Ordinal4 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis04Ordinal4_Click(object sender, EventArgs e)
         {
             GenerateNewChart(0, 4);
         }
 
-        private void Axis12Ordinal5_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis12Ordinal5 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis12Ordinal5_Click(object sender, EventArgs e)
         {
             GenerateNewChart(1, 2);
         }
 
-        private void Axis13Ordinal6_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis13Ordinal6 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis13Ordinal6_Click(object sender, EventArgs e)
         {
             GenerateNewChart(1, 3);
         }
 
-        private void Axis14Ordinal7_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis14Ordinal7 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis14Ordinal7_Click(object sender, EventArgs e)
         {
             GenerateNewChart(1, 4);
         }
 
-        private void Axis15Ordinal8_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis15Ordinal8 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis15Ordinal8_Click(object sender, EventArgs e)
         {
             GenerateNewChart(2, 3);
         }
 
-        private void Axis16Ordinal9_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis16Ordinal9 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis16Ordinal9_Click(object sender, EventArgs e)
         {
             GenerateNewChart(2, 4);
         }
 
-        private void Axis17Ordinal10_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the Axis17Ordinal10 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void Axis17Ordinal10_Click(object sender, EventArgs e)
         {
             GenerateNewChart(3, 4);
         }
 
-        /// <summary>
-        /// Handles the Click event of the button1 control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void button1_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the button1 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+		private void button1_Click(object sender, EventArgs e)
         {
             AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 1);
             aiView.Show();
         }
 
-        private void SubGraph2_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the SubGraph2 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void SubGraph2_Click(object sender, EventArgs e)
         {
             AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 2);
             aiView.Show();
         }
 
-        private void SubGraph3_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the SubGraph3 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void SubGraph3_Click(object sender, EventArgs e)
         {
             AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 3);
             aiView.Show();
         }
 
-        private void SubGraph4_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Handles the Click event of the SubGraph4 control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		private void SubGraph4_Click(object sender, EventArgs e)
         {
             AIOutputView aiView = new AIOutputView(_dataId, _axisX, _axisY, _ordinalId, 4);
             aiView.Show();
         }
 
+		/// <summary>
+		/// Handles the Click event of the TurnLeft control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void TurnLeft_Click(object sender, EventArgs e)
 		{
 			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation - 2 > -180)
@@ -334,6 +420,11 @@ namespace OverlordVisualizer
 			}
 		}
 
+		/// <summary>
+		/// Handles the Click event of the TurnRight control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		private void TurnRight_Click(object sender, EventArgs e)
 		{
 			if (chart1.ChartAreas["Default"].Area3DStyle.Rotation + 2 < 180)

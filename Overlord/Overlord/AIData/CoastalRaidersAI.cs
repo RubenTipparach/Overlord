@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Overlord
 {
+	/// <summary>
+	/// This represents the fully detailed Costal Raiders class parameter.
+	/// </summary>
 	public class CoastalRaidersAI
 	{
 		// Drop distance.
@@ -72,6 +75,9 @@ namespace Overlord
 		double[] partialAiInputs;
 		double[] fullAiInputs;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CoastalRaidersAI"/> class.
+		/// </summary>
 		public CoastalRaidersAI()
 		{
 			resourceOnlyAiInputs = new double[]

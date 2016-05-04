@@ -75,12 +75,9 @@
     <Compile Include="AIData\CoastalRaidersAI.cs" />
     <Compile Include="AIData\CoastalRaidersFuedalResourceManager.cs" />
     <Compile Include="AILearningEngine.cs" />
-    <Compile Include="AILearnerLocal.cs" />
     <Compile Include="Configurations.cs" />
     <Compile Include="Learning\AITrainingModule.cs" />
     <Compile Include="Learning\SupervisedLearningSetCsv.cs" />
-    <Compile Include="Learning\SupervisedLearningSetDao.cs" />
-    <Compile Include="Learning\UnsupervisedLearningSet.cs" />
     <Compile Include="Models\GameData.cs" />
     <Compile Include="Search\HillClimbing.cs" />
     <Compile Include="StreamUtilities.cs" />

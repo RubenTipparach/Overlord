@@ -8,7 +8,7 @@ using Matrix = Overlord.Matrix;
 namespace Overlord
 {
     /// <summary>
-    /// Blah blah blah.
+    /// My hand made first neural network experiment.
     /// </summary>
     public class TwoLayer
     {

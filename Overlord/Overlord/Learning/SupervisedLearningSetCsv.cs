@@ -11,12 +11,12 @@ namespace Overlord.Learning
 {
 	/// <summary>
 	/// This class reads in data from a csv file.
-	///  I'm upgrading this to a mysql database to streamline this process.
+	/// I'm upgrading this to a mysql database to streamline this process.
 	/// </summary>
 	public class SupervisedLearningSetCsv
 	{
 		/// <summary>
-		/// Created a bullshit method to train bullshit results.
+		/// Created this to test the custom neuron network with binary inputs.
 		/// </summary>
 		/// <param name="writer"></param>
 		public static void Test(
@@ -51,7 +51,7 @@ namespace Overlord.Learning
 
 			TrainingSet trainingSet = new TrainingSet(10, 8);
 
-			// Do I care about reader? Nah, probably not.
+			// A file stream reader.
 			var inDefaule = Console.In;
 			using (StreamReader reader = new StreamReader(file))
 			{
@@ -91,7 +91,6 @@ namespace Overlord.Learning
 
 			network.Learn(trainingSet, numberOfCycles);
 
-			// idk what this is for....
 			double[] indices = new double[numberOfCycles];
 			// for (int i = 0; i < numberOfCycles; i++) { indices[i] = i; } .. oh nvm, its for graphing the learning curve
 

@@ -28,6 +28,11 @@ function loadDoc() {
 
 <body>
     <?
+    /*
+    * This file acts as the main PHP entry for for our data collection process.
+    * It also gives users a view of the current games played, and has input boxes
+    * for the user to enter their game scores when they are done playing.
+    */
 	$conn = new mysqli("localhost:3306", "root", "", "aoenn");
 
 	// do some selects on the tables
