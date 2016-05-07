@@ -153,6 +153,11 @@ namespace Overlord.Search
         /// Finds the optimal solution2.
         /// This is my second attempt at writing a hill climbing algorithm. We should try and maximize the output first,
         /// then begin out ascent.
+		/// Algorithm:
+		///		1. Find the most optimal known solution. (if we had more data, find its weighted average)
+		///		2. Apply this solution to the current P1 challenger in the ANN model.
+		///		3. If this guy doesn't win begin adjustment of values, by climbing only 1% each time.
+		///		4. Iterate through all combinations if we don't increaase in over all value, else increase that one axis.
         /// </summary>
         /// <param name="toleranceAmount">The tolerance amount.</param>
         public void FindOptimalSolution2(double toleranceAmount = 0.04)
