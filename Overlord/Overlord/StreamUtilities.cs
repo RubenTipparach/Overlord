@@ -122,7 +122,7 @@ namespace Overlord
 		/// <summary>
 		/// Gets the AI data set.
 		/// </summary>
-		/// <returns>Good shit.</returns>
+		/// <returns>AI Data set.</returns>
 		public static List<CoastalRaidersFuedalResourceManager> GetAiDataSet()
 		{
 			var dataRows = new List<CoastalRaidersFuedalResourceManager>();
@@ -180,7 +180,7 @@ namespace Overlord
 		/// <summary>
 		/// Gets the latest AI entry.
 		/// </summary>
-		/// <returns>Good shit.</returns>
+		/// <returns>AI Data.</returns>
 		public static CoastalRaidersFuedalResourceManager[] GetLatestAiEntry()
 		{
 			CoastalRaidersFuedalResourceManager latestAiP1 = null;
