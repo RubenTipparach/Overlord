@@ -64,7 +64,7 @@ namespace Overlord
                     }
                 );
 
-                // Fuck it, can't get this conversion crap to work
+                // conversion not working
                 VectorN weights = new VectorN(new double[] {
                     (new VectorN(new double[] { l0[0][0], l0[1][0], l0[2][0], l0[3][0] })).Dot(l1_delta),
                     (new VectorN(new double[] { l0[0][1], l0[1][1], l0[2][1], l0[3][1] })).Dot(l1_delta),

@@ -204,7 +204,7 @@ namespace Overlord.Learning
 			// _climber = new HillClimbing(veryFirstInput, _nueralNetwork);
 
 
-			// Hardcoding these dimensions, I'm that lazy :[
+			// Hardcoding these dimensions
 			int ordinalTracker = 1;
             for(int i = 0; i < 4; i++)
             {
@@ -359,7 +359,6 @@ namespace Overlord.Learning
 				var player1 = rawMgxStats[i].GenerateAnnSample();
 				var player2 = rawMgxStats[i + 1].GenerateAnnSample();
 
-				// Some bad ass Linq right here.
 				var trainingSample = new TrainingSample(
 					player1.InputVector.Concat(player2.InputVector).ToArray(),
 					player1.OutputVector.Concat(player2.OutputVector).ToArray());
